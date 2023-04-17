@@ -20,9 +20,9 @@ namespace GroupAPIProject.Data.Entities
         public int RetailerId { get; set; }
         public virtual RetailerEntity Retailer { get; set; }
         [Required]
-        [ForeignKey("Product")]
-        public int ProductId { get; set; }
-        public virtual ProductEntity Product { get; set; }
+        [ForeignKey("InventoryItem")]
+        public int InventoryItemId { get; set; }
+        public virtual InventoryItemEntity InventoryItem { get; set; }
         [Required]
         public int Quantity { get; set; }
         [Required]

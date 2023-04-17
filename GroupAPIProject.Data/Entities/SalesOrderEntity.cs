@@ -21,5 +21,7 @@ namespace GroupAPIProject.Data.Entities
         public virtual RetailerEntity Retailer { get; set; }
         [Required]
         public DateTimeOffset OrderDate { get; set; }
+        public virtual List<SalesOrderItemEntity> ListOfSalesOrderItems{get;set;} = new List<SalesOrderItemEntity>();
+
     }
 }
