@@ -7,10 +7,16 @@ namespace GroupAPIProject.Models.PurchaseOrderItem
 {
     public class PurchaseOrderItemCreate
     {
-        public int Id{get;set;}
-        public int PurchaseOrderId{get;set;}
-        public int ProductId{get;set;}
-        public int Quantity{get;set;}
-        public double Price{get;set;}
+
+        public int PurchaseOrderId { get; set; }
+
+        public int RetailerId { get; set; }
+
+
+        public int ProductId { get; set; }
+
+        public int Quantity { get; set; }
+
+        public double Price { get; set; }
     }
 }
