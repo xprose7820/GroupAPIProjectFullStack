@@ -37,13 +37,13 @@ namespace GroupAPIProject.Services.SalesOrderItem
             // SupplierEntity supplierExists = await _dbContext.Suppliers.FirstOrDefaultAsync(g => g.Id == model.SupplierId);
             InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.InventoryItemId);
 
-            if (inventoryItemExists is null)
+            if (inventoryItemExists is null || inventoryItemExists.RetailerId != _retailerId)
             {
                 return false;
             }
             SalesOrderEntity salesOrderExists = await _dbContext.SalesOrders.FindAsync(model.SalesOrderId);
 
-            if (salesOrderExists is null)
+            if (salesOrderExists is null || salesOrderExists.RetailerId != _retailerId)
             {
                 return false;
             }
@@ -57,13 +57,23 @@ namespace GroupAPIProject.Services.SalesOrderItem
                 Price = model.Price
             };
 
+            LocationEntity locationExists = await _dbContext.Locations.FindAsync(inventoryItemExists.LocationId);
+            if(locationExists is null || locationExists.RetailerId != _retailerId){
+                return false;
+            }
+           
+            locationExists.Capacity = locationExists.Capacity - model.Quantity;
             inventoryItemExists.Stock = inventoryItemExists.Stock - model.Quantity;
+
 
             _dbContext.SalesOrderItems.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
-            return numberOfChanges == 2;
+            return numberOfChanges == 3;
 
         }
+
+
+
         
 
 
