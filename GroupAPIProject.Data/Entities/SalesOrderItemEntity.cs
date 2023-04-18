@@ -14,7 +14,7 @@ namespace GroupAPIProject.Data.Entities
         [Required]
         [ForeignKey("SalesOrder")]
         public int SalesOrderId { get; set; }
-        public virtual SalesOrderEntity PurchaseOrder { get; set; }
+        public virtual SalesOrderEntity SalesOrder { get; set; }
         [Required]
         [ForeignKey("Retailer")]
         public int RetailerId { get; set; }
