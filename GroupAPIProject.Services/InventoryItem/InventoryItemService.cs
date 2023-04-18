@@ -36,13 +36,13 @@ namespace GroupAPIProject.Services.InventoryItem
             }
 
             PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.PurchaseOrderId);
-            if (purchaseOrderExists == null) 
+            if (purchaseOrderExists == null || purchaseOrderExists.Retailer.Id != retailerExists.Id) 
             {
                 return false;
             }
 
             LocationEntity locationExists = await _dbContext.Locations.FindAsync(model.LocationId);
-            if (locationExists == null) 
+            if (locationExists == null || locationExists.RetailerId != retailerExists.Id) 
             {
                 return false;
             }
@@ -54,9 +54,27 @@ namespace GroupAPIProject.Services.InventoryItem
                 LocationId = model.LocationId,
                 Stock = model.Stock
             };
+
+            locationExists.Capacity = locationExists.Capacity - model.Stock;
+
+
+
             _dbContext.InventoryItems.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
-            return numberOfChanges == 1;
+            return numberOfChanges == 2;
+        }
+
+        public async Task<bool> InventoryItemUpdate(InventoryItemUpdate model)
+        {
+            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.Id);
+            if (inventoryItemExists == null)
+            {
+                return false;
+            }
+            else
+            {
+                inventoryItemExists.Stock = model.Stock;
+            }
 
         }
     }
