@@ -22,7 +22,6 @@ namespace GroupAPIProject.Models.Product
         [Required]
         public double Price { get; set; }
         [Required]
-        [ForeignKey("Supplier")]
         public int SupplierId;
     }
 }
