@@ -9,13 +9,14 @@ namespace GroupAPIProject.Models.Product
 {
     public class ProductCreate
     {
-        [Required]
+        public int SupplierId{get;set;}
+      
         public string ProductName { get; set; }
-        [Required]
+       
         public string Description { get; set; }
-        [Required]
+        
         public string Category { get; set; }
-        [Required]
+       
         public double Price { get; set; }
     }
 }
