@@ -4,10 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace GroupAPIProject.WebAPI.Controllers
-{ [Authorize("Roles=AdminEntity")]
-    public class AdminController
+{
+    public class SalesOrderItemController
     {
-               
-
+        
     }
 }

@@ -5,18 +5,11 @@ using System.Threading.Tasks;
 
 namespace GroupAPIProject.Models.PurchaseOrderItem
 {
-    public class PurchaseOrderItemCreate
+    public class PurchaseOrderItemUpdate
     {
-
-        public int PurchaseOrderId { get; set; }
-
-        public int RetailerId { get; set; }
-
-
-        public int ProductId { get; set; }
-
+        
+        public int Id { get; set; }
         public int Quantity { get; set; }
-
-
+        
     }
 }

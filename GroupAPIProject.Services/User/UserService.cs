@@ -47,6 +47,26 @@ namespace GroupAPIProject.Services.User
             }
             int counter = await _context.SaveChangesAsync();
             return counter == 1;
+            if(model.Role == "Admin"){
+                AdminEntity entity = 
+            }
+            // if (await GetUserByUsername(model.Username) != null)
+            // {
+            //     return false;
+            // }
+            // UserEntity entity = new UserEntity
+            // {
+            //     Username = model.Username
+            // };
+             PasswordHasher<UserEntity> passwordHasher = new PasswordHasher<UserEntity>();
+            // entity.Password = passwordHasher.HashPassword(entity, model.Password);
+            // _context.Users.Add(entity);
+            // int numberOfChanges = await _context.SaveChangesAsync();
+            // return numberOfChanges == 1;
+        }
+        public async Task<UserEntity> GetUserByUsername(string username)
+        {
+            return await _context.Users.FirstOrDefaultAsync(user => user.Username.ToLower() == username.ToLower());
         }
 
 

@@ -5,67 +5,59 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using GroupAPIProject.Data;
 using GroupAPIProject.Data.Entities;
-using GroupAPIProject.Models.PurchaseOrder;
+using GroupAPIProject.Models.SalesOrder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace GroupAPIProject.Services.PurchaseOrder
+namespace GroupAPIProject.Services.SalesOrder
 {
-    public class PurchaseOrderService : IPurchaseOrderService
+    public class SalesOrderService : ISalesOrderService
     {
         private readonly int _retailerId;
         private readonly ApplicationDbContext _dbContext;
 
-        public PurchaseOrderService(IHttpContextAccessor httpContextAccessor, ApplicationDbContext dbContext)
+        public SalesOrderService(IHttpContextAccessor httpContextAccessor, ApplicationDbContext dbContext)
         {
             var userClaims = httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
             var value = userClaims.FindFirst("Id")?.Value;
             var validId = int.TryParse(value, out _retailerId);
             if (!validId)
-                throw new Exception("Attempted to build without Retailer Id claim.");
+                throw new Exception("Attempted to build NoteService without Retailer Id claim.");
 
 
             _dbContext = dbContext;
         }
-
-        public async Task<bool> CreatePurchaseOrderAsync(PurchaseOrderCreate model)
-        {
+        public async Task<bool> CreateSalesOrderAsync(SalesOrderCreate model){
             RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
             if (retailerExists is null)
             {
                 return false;
             }
             // SupplierEntity supplierExists = await _dbContext.Suppliers.FirstOrDefaultAsync(g => g.Id == model.SupplierId);
-            SupplierEntity supplierExists = await _dbContext.Suppliers.FindAsync(model.SupplierId);
+            CustomerEntity customerExists = await _dbContext.Customers.FindAsync(model.CusomterId);
 
-            if (supplierExists is null)
+            if (customerExists is null)
             {
                 return false;
             }
-            PurchaseOrderEntity entity = new PurchaseOrderEntity
-            {
-                SupplierId = model.SupplierId,
+            SalesOrderEntity entity = new SalesOrderEntity{
+                CusomterId = model.CusomterId,
                 RetailerId = _retailerId,
                 OrderDate = DateTime.Now
             };
-            _dbContext.PurchaseOrders.Add(entity);
+            _dbContext.SalesOrders.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
-
         }
-        public async Task<bool> UpdatePurchaseOrderAsync(PurchaseOrderUpdate model)
-        {
-            PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.Id);
-            if (purchaseOrderExists is null || purchaseOrderExists.RetailerId != _retailerId)
-            {
+        public async Task<bool> UpdateSalesOrderAsync(SalesOrderUpdate model){
+            SalesOrderEntity salesOrderExists = await _dbContext.SalesOrders.FindAsync(model.Id);
+            if(salesOrderExists is null || salesOrderExists.RetailerId != _retailerId){
                 return false;
             }
-            purchaseOrderExists.SupplierId = model.SupplierId;
+            salesOrderExists.CusomterId = model.CusomterId;
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
-
         }
-        
 
     }
 }
