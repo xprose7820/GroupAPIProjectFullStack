@@ -30,19 +30,19 @@ namespace GroupAPIProject.Services.InventoryItem
         public async Task<bool> CreateInventoryItemAsync(InventoryItemCreate model)
         {
             RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
-            if (retailerExists == null)
+            if (retailerExists == null || retailerExists.Id == _retailerId)
             {
                 return false;
             }
 
             PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.PurchaseOrderId);
-            if (purchaseOrderExists == null) 
+            if (purchaseOrderExists == null || purchaseOrderExists.Retailer.Id != _retailerId) 
             {
                 return false;
             }
 
             LocationEntity locationExists = await _dbContext.Locations.FindAsync(model.LocationId);
-            if (locationExists == null) 
+            if (locationExists == null || locationExists.RetailerId != _retailerId) 
             {
                 return false;
             }
@@ -54,12 +54,43 @@ namespace GroupAPIProject.Services.InventoryItem
                 LocationId = model.LocationId,
                 Stock = model.Stock
             };
-            
+
+            locationExists.Capacity = locationExists.Capacity - model.Stock;
+
 
             _dbContext.InventoryItems.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
-            return numberOfChanges == 1;
+            return numberOfChanges == 2;
+        }
 
+        public async Task<bool> InventoryItemUpdate(InventoryItemUpdate model)
+        {
+            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.Id);
+            if (inventoryItemExists == null || inventoryItemExists.RetailerId != _retailerId)
+            {
+                return false;
+            }
+            else
+            {
+                inventoryItemExists.Stock = model.Stock;
+            }
+
+            int originalStock = inventoryItemExists.Stock;
+            inventoryItemExists.Stock = model.Stock;
+
+            PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.PurchaseOrderId);
+            if (purchaseOrderExists == null || purchaseOrderExists.Retailer.Id != _retailerId)
+            {
+                return false;
+            }
+            LocationEntity locationExists = await _dbContext.Locations.FindAsync(model.LocationId);
+            if (locationExists == null || locationExists.RetailerId != _retailerId)
+            {
+                return false;
+            }
+            locationExists.Capacity = model.Stock;
+            int numberOfChanges = await _dbContext.SaveChangesAsync();
+            return numberOfChanges == 2;
         }
     }
 }

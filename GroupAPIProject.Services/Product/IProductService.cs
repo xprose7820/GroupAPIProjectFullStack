@@ -10,5 +10,6 @@ namespace GroupAPIProject.Services.Product
     public interface IProductService
     {
         Task<bool> CreateProductAsync(ProductCreate model);
+        Task<bool> UpdateProductAsync(ProductUpdate model);
     }
 }
