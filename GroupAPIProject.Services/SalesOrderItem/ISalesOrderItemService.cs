@@ -9,5 +9,6 @@ namespace GroupAPIProject.Services.SalesOrderItem
     public interface ISalesOrderItemService
     {
         Task<bool> CreateSalesOrderItemAsync(SalesOrderItemCreate model);
+        Task<bool> UpdatSalesOrderItemAsync(SalesOrderItemUpdate model);
     }
 }

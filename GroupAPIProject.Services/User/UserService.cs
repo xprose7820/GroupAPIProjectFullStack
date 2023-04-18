@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GroupAPIProject.Data;
 using GroupAPIProject.Data.Entities;
 using GroupAPIProject.Models.User;
+using Microsoft.AspNetCore.Identity;
 
 namespace GroupAPIProject.Services.User
 {
@@ -19,19 +20,22 @@ namespace GroupAPIProject.Services.User
 
         public async Task<bool> RegisterUserAsync(UserRegister model)
         {
-            if (await GetUserByUsername(model.Username) != null)
-            {
-                return false;
+            if(model.Role == "Admin"){
+                AdminEntity entity = 
             }
-            UserEntity entity = new UserEntity
-            {
-                Username = model.Username
-            };
-            PasswordHasher<UserEntity> passwordHasher = new PasswordHasher<UserEntity>();
-            entity.Password = passwordHasher.HashPassword(entity, model.Password);
-            _context.Users.Add(entity);
-            int numberOfChanges = await _context.SaveChangesAsync();
-            return numberOfChanges == 1;
+            // if (await GetUserByUsername(model.Username) != null)
+            // {
+            //     return false;
+            // }
+            // UserEntity entity = new UserEntity
+            // {
+            //     Username = model.Username
+            // };
+             PasswordHasher<UserEntity> passwordHasher = new PasswordHasher<UserEntity>();
+            // entity.Password = passwordHasher.HashPassword(entity, model.Password);
+            // _context.Users.Add(entity);
+            // int numberOfChanges = await _context.SaveChangesAsync();
+            // return numberOfChanges == 1;
         }
         public async Task<UserEntity> GetUserByUsername(string username)
         {
