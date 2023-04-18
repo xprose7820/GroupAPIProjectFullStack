@@ -43,7 +43,7 @@ namespace GroupAPIProject.Services.PurchaseOrderItem
             }
             PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.PurchaseOrderId);
 
-            if (purchaseOrderExists is null)
+            if (purchaseOrderExists is null || purchaseOrderExists.RetailerId != _retailerId)
             {
                 return false;
             }
@@ -54,13 +54,18 @@ namespace GroupAPIProject.Services.PurchaseOrderItem
                 ProductId = model.ProductId,
                 PurchaseOrderId = model.PurchaseOrderId,
                 Quantity = model.Quantity,
-                Price = model.Price
+                Price = productExists.Price
             };
+            // aftr creating a PurchaseOrderItemEntity, need to later add to an existing InventoryItem
+
+
             _dbContext.PurchaseOrderItems.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
 
-
         }
+
+
+
     }
 }

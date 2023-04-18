@@ -42,7 +42,7 @@ namespace GroupAPIProject.Services.SalesOrder
             }
             SalesOrderEntity entity = new SalesOrderEntity{
                 CusomterId = model.CusomterId,
-                RetailerId = model.RetailerId,
+                RetailerId = _retailerId,
                 OrderDate = DateTime.Now
             };
             _dbContext.SalesOrders.Add(entity);
