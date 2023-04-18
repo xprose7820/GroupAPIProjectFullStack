@@ -26,8 +26,35 @@ namespace GroupAPIProject.Services.Customer
 
             _context.Customers.Add(customerEntity);
 
-            var numberOfChanges = await _context.SaveChangesAsync();
+            var numberOfChanges = await _context.SaveChangesAsync(); 
             return numberOfChanges == 1;
         }
+
+        public async Task<bool> RemoveCustomerAsync(string customerName)
+        {
+            var customerEntity = await _context.Customers.FirstOrDefaultAsync(name => name.CustomerEntity == customerName);
+
+            if (customerEntity == null)
+
+                return false;
+
+            _context.Customers.Remove(customerEntity);
+            return await _context.SaveChangesAsync() == 1;
+        }
+
+        public async Task<bool> UpdateCustomerAsync(CustomerRegister update)
+        {
+            var customerEntity = await _context.Customers.FirstOrDefaultAsync(update);
+            if (customerEntity.Id != null)
+                return false;
+            
+            customerEntity.CustomerName = update.CustomerName;
+
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+            
+        }
+
+        
     }
 }
