@@ -64,8 +64,17 @@ namespace GroupAPIProject.Services.PurchaseOrderItem
             return numberOfChanges == 1;
 
         }
+        public async Task<bool> UpdatePurchaseOrderItemAsync(PurchaseOrderItemUpdate model){
+            PurchaseOrderItemEntity purchaseOrderItemExists = await _dbContext.PurchaseOrderItems.FindAsync(model.Id);
+            if(purchaseOrderItemExists is null || purchaseOrderItemExists.RetailerId != _retailerId){
+                return false;
+            }
+            purchaseOrderItemExists.Quantity = model.Quantity;
+            int numberOfChanges = await _dbContext.SaveChangesAsync();
+            return numberOfChanges == 1;
+        }
 
-
+ 
 
     }
 }
