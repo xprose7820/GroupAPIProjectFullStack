@@ -33,6 +33,10 @@ namespace GroupAPIProject.Services.SalesOrder
             {
                 return false;
             }
+            LocationEntity locationExists = await _dbContext.Locations.FindAsync(model.LocationId);
+            if(locationExists is null){
+                return false;
+            }
             // SupplierEntity supplierExists = await _dbContext.Suppliers.FirstOrDefaultAsync(g => g.Id == model.SupplierId);
             CustomerEntity customerExists = await _dbContext.Customers.FindAsync(model.CusomterId);
 
@@ -43,6 +47,7 @@ namespace GroupAPIProject.Services.SalesOrder
             SalesOrderEntity entity = new SalesOrderEntity{
                 CusomterId = model.CusomterId,
                 RetailerId = _retailerId,
+                LocationId = model.LocationId,
                 OrderDate = DateTime.Now
             };
             _dbContext.SalesOrders.Add(entity);

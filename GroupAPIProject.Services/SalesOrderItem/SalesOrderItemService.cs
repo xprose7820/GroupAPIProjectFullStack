@@ -79,8 +79,8 @@ namespace GroupAPIProject.Services.SalesOrderItem
             }
             int originalQuantity = salesOrderItemExists.Quantity;
             salesOrderItemExists.Quantity = model.Quantity;
-            // need to update the inventory item
-
+            // need to update the inventory item/ location
+            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FirstAsync()
             
         }
 

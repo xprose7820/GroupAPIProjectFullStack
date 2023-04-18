@@ -11,6 +11,7 @@ namespace GroupAPIProject.Models.SalesOrder
         public int CusomterId { get; set; }
       
         public int RetailerId { get; set; }
+        public int LocationId {get; set;}
       
         public DateTimeOffset OrderDate { get; set; }
         

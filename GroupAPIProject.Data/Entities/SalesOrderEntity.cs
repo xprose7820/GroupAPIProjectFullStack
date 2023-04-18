@@ -15,6 +15,11 @@ namespace GroupAPIProject.Data.Entities
         [ForeignKey("Customer")]
         public int CusomterId { get; set; }
         public virtual CustomerEntity Customer { get; set; }
+
+        [Required]
+        [ForeignKey("Location")]
+        public int LocationId { get; set; }
+        public virtual LocationEntity Location { get; set; }
         [Required]
         [ForeignKey("Retailer")]
         public int RetailerId { get; set; }
