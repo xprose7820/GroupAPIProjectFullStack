@@ -41,6 +41,11 @@ namespace GroupAPIProject.Services.PurchaseOrderItem
             {
                 return false;
             }
+            // check if supplier contains product 
+            SupplierEntity supplierExists = await _dbContext.Suppliers.FindAsync(productExists.SupplierId);
+            if(supplierExists is null){
+                return false;
+            }
             PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.PurchaseOrderId);
 
             if (purchaseOrderExists is null || purchaseOrderExists.RetailerId != _retailerId)
@@ -64,17 +69,55 @@ namespace GroupAPIProject.Services.PurchaseOrderItem
             return numberOfChanges == 1;
 
         }
-        public async Task<bool> UpdatePurchaseOrderItemAsync(PurchaseOrderItemUpdate model){
+        public async Task<bool> UpdatePurchaseOrderItemAsync(PurchaseOrderItemUpdate model)
+        {
+
             PurchaseOrderItemEntity purchaseOrderItemExists = await _dbContext.PurchaseOrderItems.FindAsync(model.Id);
-            if(purchaseOrderItemExists is null || purchaseOrderItemExists.RetailerId != _retailerId){
+            if (purchaseOrderItemExists is null || purchaseOrderItemExists.RetailerId != _retailerId)
+            {
                 return false;
             }
+            int originalQuantity = purchaseOrderItemExists.Quantity;
             purchaseOrderItemExists.Quantity = model.Quantity;
+            //need to find associated inventoryItem to update if not we just update the purchaseOrderItem
+            PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(purchaseOrderItemExists.PurchaseOrderId);
+            if (purchaseOrderExists is null || purchaseOrderExists.RetailerId != _retailerId)
+            {
+                return false;
+            }
+            
+            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(purchaseOrderExists.Id);
+            if (inventoryItemExists is null || inventoryItemExists.RetailerId != _retailerId)
+            {
+                return false;
+            }
+            
+            if (model.Quantity < originalQuantity)
+            {
+                inventoryItemExists.Stock = inventoryItemExists.Stock + (originalQuantity - model.Quantity);
+                LocationEntity locationCapacityUpdate = await _dbContext.Locations.FindAsync(inventoryItemExists.LocationId);
+                locationCapacityUpdate.Capacity = locationCapacityUpdate.Capacity + (originalQuantity - model.Quantity);
+                int counter = await _dbContext.SaveChangesAsync();
+                return counter == 3;
+            }
+            else if (model.Quantity > originalQuantity)
+            {
+                inventoryItemExists.Stock = inventoryItemExists.Stock - (model.Quantity - originalQuantity);
+                LocationEntity locationCapacityUpdate = await _dbContext.Locations.FindAsync(inventoryItemExists.LocationId);
+                locationCapacityUpdate.Capacity = locationCapacityUpdate.Capacity - (model.Quantity - originalQuantity);
+                int counter = await _dbContext.SaveChangesAsync();
+                return counter == 3;
+            }
+
+
+
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
         }
+        
 
- 
+
+
 
     }
 }

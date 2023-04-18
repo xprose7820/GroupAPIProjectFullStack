@@ -54,6 +54,8 @@ namespace GroupAPIProject.Services.InventoryItem
                 LocationId = model.LocationId,
                 Stock = model.Stock
             };
+            
+
             _dbContext.InventoryItems.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
