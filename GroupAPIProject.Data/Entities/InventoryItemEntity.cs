@@ -10,21 +10,21 @@ namespace GroupAPIProject.Data.Entities
     public class InventoryItemEntity
     {
         [Key]
-        public int Id{get;set;}
+        public int Id{ get; set; }
         [Required]
         [ForeignKey("PurchaseOrder")]
-        public int PurchaseOrderId{get;set;}
-        public virtual PurchaseOrderEntity PurchaseOrderEntity{get;set;}
+        public int PurchaseOrderId{ get ;set; }
+        public virtual PurchaseOrderEntity PurchaseOrderEntity{ get; set; }
         [Required]
         [ForeignKey("Location")]
-        public int LocationId{get;set;}
-        public virtual LocationEntity Location{get;set;}
+        public int LocationId{ get; set; }
+        public virtual LocationEntity Location{ get; set; }
         [Required]
         [ForeignKey("Retailer")]
         public int RetailerId { get; set; }
         public virtual RetailerEntity Retailer { get; set; }
         [Required]
-        public int Stock{get;set;}
+        public int Stock{ get; set; }
 
     }
 }
