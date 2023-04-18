@@ -26,11 +26,11 @@ namespace GroupAPIProject.WebAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (await _purchaseOrderItemService.CreatePurchaseOrderAsync(model))
+            if (await _purchaseOrderItemService.CreatePurchaseOrderItemAsync(model))
             {
-                return Ok("ProductOrder added to Retailer");
+                return Ok("ProductOrderItem added to Retailer");
             }
-            return BadRequest("ProductOrder not added to Retailer");
+            return BadRequest("ProductOrderItem not added to Retailer");
         }
 
     }
