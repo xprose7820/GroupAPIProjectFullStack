@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GroupAPIProject.Services.Token
 {
-    public class TokenService<T> : ITokenService<T> where T : UserEntity
+    public class TokenService : ITokenService
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
@@ -27,10 +27,9 @@ namespace GroupAPIProject.Services.Token
 
         }
 
-        public async Task<TokenResponse> GetTokenAsync(TokenRequest model)
+        public async Task<TokenResponse> GetTokenAsync<T>(TokenRequest model) where T : UserEntity
         {
-
-            T userEntity = await GetValidUserAsync(model);
+            T userEntity = await GetValidUserAsync<T>(model);
             if (userEntity is null)
             {
 
@@ -41,7 +40,7 @@ namespace GroupAPIProject.Services.Token
 
             return GenerateToken(userEntity);
         }
-        private async Task<T> GetValidUserAsync(TokenRequest model)
+        private async Task<T> GetValidUserAsync<T>(TokenRequest model) where T : UserEntity
         {
 
 
@@ -55,7 +54,8 @@ namespace GroupAPIProject.Services.Token
 
             return userEntity;
         }
-        private TokenResponse GenerateToken(T entity)
+
+        private TokenResponse GenerateToken<T>(T entity) where T : UserEntity
         {
             Claim[] claims = GetClaims(entity);
 
@@ -82,13 +82,13 @@ namespace GroupAPIProject.Services.Token
 
             return tokenResponse;
         }
-        private Claim[] GetClaims(T user)
+        private Claim[] GetClaims<T>(T user) where T: UserEntity
         {
 
 
             string userType = user.GetType().Name;
 
-            Claim[] claims = new Claim[]{ new Claim("Id", user.Id.ToString()),new Claim("Username", user.Username),new Claim("Role", userType) };
+            Claim[] claims = new Claim[] { new Claim("Id", user.Id.ToString()), new Claim("Username", user.Username), new Claim("Role", userType) };
 
             return claims;
         }

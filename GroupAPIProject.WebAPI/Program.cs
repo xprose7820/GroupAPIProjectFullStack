@@ -11,8 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sqlOptions => sqlOptions.EnableRetryOnFailure()));
-builder.Services.AddScoped<ITokenService<AdminEntity>, TokenService<AdminEntity>>();
-builder.Services.AddScoped<ITokenService<RetailerEntity>, TokenService<RetailerEntity>>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddControllers();
 builder.Services.AddAuthorization(options =>
