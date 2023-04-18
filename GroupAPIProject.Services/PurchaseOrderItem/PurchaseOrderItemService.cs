@@ -65,14 +65,37 @@ namespace GroupAPIProject.Services.PurchaseOrderItem
 
         }
         public async Task<bool> UpdatePurchaseOrderItemAsync(PurchaseOrderItemUpdate model){
+            
             PurchaseOrderItemEntity purchaseOrderItemExists = await _dbContext.PurchaseOrderItems.FindAsync(model.Id);
             if(purchaseOrderItemExists is null || purchaseOrderItemExists.RetailerId != _retailerId){
                 return false;
             }
-            purchaseOrderItemExists.Quantity = model.Quantity;
+            //need to find associated inventoryItem to update if not we just update the purchaseOrderItem
+            PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(purchaseOrderItemExists.PurchaseOrderId);
+            if(purchaseOrderExists is null || purchaseOrderExists.RetailerId != _retailerId){
+                return false;
+            }
+            
+            purchaseOrderItemExists.Quantity = model.Quantity; 
+
+            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(purchaseOrderExists.Id);
+            if(inventoryItemExists is null || inventoryItemExists.RetailerId != _retailerId){
+
+                return false;
+            }
+            if (model.Quantity < inventoryItemExists.Stock){
+                inventoryItemExists.Stock = inventoryItemExists.Stock + ()
+            }
+            elif (model.Quanity > inventoryItemExists.Stock){
+
+            }
+
+
+            
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
         }
+
 
  
 

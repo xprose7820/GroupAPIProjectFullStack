@@ -62,7 +62,7 @@ namespace GroupAPIProject.Services.SalesOrderItem
                 return false;
             }
            
-            locationExists.Capacity = locationExists.Capacity - model.Quantity;
+            locationExists.Capacity = locationExists.Capacity + model.Quantity;
             inventoryItemExists.Stock = inventoryItemExists.Stock - model.Quantity;
 
 
