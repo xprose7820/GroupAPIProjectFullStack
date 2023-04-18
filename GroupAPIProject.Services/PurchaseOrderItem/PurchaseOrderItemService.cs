@@ -41,7 +41,7 @@ namespace GroupAPIProject.Services.PurchaseOrderItem
             {
                 return false;
             }
-            PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.ProductId);
+            PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.PurchaseOrderId);
 
             if (purchaseOrderExists is null)
             {
