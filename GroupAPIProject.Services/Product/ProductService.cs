@@ -21,7 +21,23 @@ namespace GroupAPIProject.Services.Product
 
         public async Task<bool> CreateProductAsync(ProductCreate model)
         {
-            
+            SupplierEntity supplierExists = await _dbContext.Suppliers.FindAsync(model.SupplierId);
+            if (supplierExists == null) 
+            {
+                return false;
+            }
+            ProductEntity entity = new ProductEntity
+            {
+                SupplierId = model.SupplierId,
+                ProductName = model.ProductName,
+                Description = model.Description,
+                Category = model.Category,
+                Price = model.Price,
+            };
+            _dbContext.Products.Add(entity);
+            int numberOfChanges = await _dbContext.SaveChangesAsync();
+            return numberOfChanges == 1;
+
         }
 
     }
