@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GroupAPIProject.Services.InventoryItem
 {
-    internal class InventoryItemService : IinventoryItemService
+    internal class InventoryItemService : IInventoryItemService
     {
     }
 }
