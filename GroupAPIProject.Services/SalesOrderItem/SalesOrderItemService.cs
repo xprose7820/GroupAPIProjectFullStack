@@ -7,6 +7,7 @@ namespace GroupAPIProject.Services.SalesOrderItem
 {
     public class SalesOrderItemService
     {
-        
+                Task<bool> CreateSalesOrderItemAsync(PurchaseOrderItemCreate model);
+
     }
 }
