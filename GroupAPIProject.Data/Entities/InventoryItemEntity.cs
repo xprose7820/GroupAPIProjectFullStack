@@ -12,9 +12,13 @@ namespace GroupAPIProject.Data.Entities
         [Key]
         public int Id{ get; set; }
         [Required]
+        [ForeignKey("Product")]
+        public int ProductId{ get ;set; }
+        public virtual ProductEntity Product{ get; set; }
+        [Required]
         [ForeignKey("PurchaseOrder")]
         public int PurchaseOrderId{ get ;set; }
-        public virtual PurchaseOrderEntity PurchaseOrderEntity{ get; set; }
+        public virtual PurchaseOrderEntity PurchaseOrder{ get; set; }
         [Required]
         [ForeignKey("Location")]
         public int LocationId{ get; set; }
