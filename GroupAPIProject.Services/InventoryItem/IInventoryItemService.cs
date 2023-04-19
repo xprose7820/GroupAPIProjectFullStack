@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GroupAPIProject.Models.InventoryItem;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace GroupAPIProject.Services.InventoryItem
 {
-    internal interface IinventoryItemService
+    public interface IInventoryItemService
     {
+        Task<bool> CreateInventoryItemAsync(InventoryItemCreate model);
     }
 }

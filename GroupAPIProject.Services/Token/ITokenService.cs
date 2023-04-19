@@ -7,8 +7,7 @@ using GroupAPIProject.Models.Token;
 
 namespace GroupAPIProject.Services.Token
 {
-    public interface ITokenService<T> where T: UserEntity
-    {
-        Task<TokenResponse> GetTokenAsync(TokenRequest model);
+    public interface ITokenService{
+        Task<TokenResponse> GetTokenAsync<T>(TokenRequest model) where T: UserEntity;
     }
 }

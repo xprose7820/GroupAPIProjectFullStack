@@ -5,14 +5,12 @@ using System.Threading.Tasks;
 
 namespace GroupAPIProject.Models.SalesOrderItem
 {
-    public class SalesOrderItemCreate
+    public class SalesOrderItemUpdate
     {
      
-        public int SalesOrderId { get; set; }
-        public int InventoryItemId{get;set;}
-        public int ProductId { get; set; }
+        public int Id { get; set; }
+         
         public int Quantity { get; set; }
         
-        public double Price { get; set; }
     }
 }

@@ -8,6 +8,11 @@ namespace GroupAPIProject.Services.User
 {
     public interface IUserService
     {
-        Task<bool> RegisterUserAsync(UserRegister model);
+        Task<bool> CreateUserAsync(UserCreate newUser);
+        Task<bool> UpdateUserAsync(UserCreate update);
+        Task<bool> RemoveUserAsync(UserCreate remove);
+
+        Task<IEnumerable<UserList>> GetUserListAsync();
+
     }
 }

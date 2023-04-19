@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using GroupAPIProject.Data;
 using GroupAPIProject.Data.Entities;
 using GroupAPIProject.Models.User;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace GroupAPIProject.Services.User
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly ApplicationDbContext _context;
 
@@ -17,25 +19,89 @@ namespace GroupAPIProject.Services.User
             _context = context;
         }
 
-        public async Task<bool> RegisterUserAsync(UserRegister model)
+        public async Task<bool> CreateUserAsync(UserCreate newUser)
         {
-            if (await GetUserByUsername(model.Username) != null)
+            if (newUser.Role == "Admin")
             {
-                return false;
+                AdminEntity entity = new AdminEntity
+                {
+                    Username = newUser.UserName
+                };
+                PasswordHasher<AdminEntity> passwordHasher = new PasswordHasher<AdminEntity>();
+                entity.Password = passwordHasher.HashPassword(entity, newUser.Password);
+                _context.Users.Add(entity);
+                int numberOfChanges = await _context.SaveChangesAsync();
+                return numberOfChanges == 1;
             }
-            UserEntity entity = new UserEntity
+
+            if (newUser.Role == "Retailer")
             {
-                Username = model.Username
-            };
-            PasswordHasher<UserEntity> passwordHasher = new PasswordHasher<UserEntity>();
-            entity.Password = passwordHasher.HashPassword(entity, model.Password);
-            _context.Users.Add(entity);
-            int numberOfChanges = await _context.SaveChangesAsync();
-            return numberOfChanges == 1;
+                RetailerEntity entity = new RetailerEntity
+                {
+                    Username = newUser.UserName
+                };
+                PasswordHasher<RetailerEntity> passwordHasher = new PasswordHasher<RetailerEntity>();
+                entity.Password = passwordHasher.HashPassword(entity, newUser.Password);
+                _context.Users.Add(entity);
+                int numberOfChanges = await _context.SaveChangesAsync();
+                return numberOfChanges == 1;
+            }
+            int counter = await _context.SaveChangesAsync();
+            return counter == 1;
         }
-        public async Task<UserEntity> GetUserByUsername(string username)
+
+        public async Task<bool> RemoveUserAsync(string userName)
         {
-            return await _context.Users.FirstOrDefaultAsync(user => user.Username.ToLower() == username.ToLower());
+            var userEntity = await _context.Users.FirstOrDefaultAsync(n => n.Username == userName);
+
+            if (userEntity == null)
+
+                return false;
+
+            _context.Users.Remove(userEntity);
+            return await _context.SaveChangesAsync() == 1;
         }
+
+        public async Task<IEnumerable<UserList>> GetUserListAsync()
+        {
+
+            IEnumerable<UserList> users = await _context.Users.Select(entity => new UserList
+            {
+                Role = entity.GetType().Name,
+                Id = entity.Id,
+                UserName = entity.Username
+            }).ToListAsync();
+            return users;
+        }
+
+        // public async Task<bool> UpdateUserAsync(UserCreate update)
+        // {
+        //     if (update.Role == "Admin")
+        //     {
+        //         var userEntity = await _context.Users.FindAsync(update);
+        //         if (userEntity.Id != null)
+        //             return false;
+
+        //         userEntity.Username = update.UserName;
+
+        //     var numberOfChanges = await _context.SaveChangesAsync();
+        //     return numberOfChanges == 1;
+        //     }
+        //     if (update.Role == "Retailer")
+        //     {
+        //         var userEntity = await _context.Users.FindAsync(update);
+        //         if (userEntity.Id != null)
+        //             return false;
+
+        //         userEntity.Username = update.UserName;
+
+        //     var numberOfChanges = await _context.SaveChangesAsync();
+        //     return numberOfChanges == 1;
+        //     }
+        //     int counter = await _context.SaveChangesAsync();
+        //     return counter == 1;
+        // }
+
+
     }
 }

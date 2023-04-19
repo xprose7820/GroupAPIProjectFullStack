@@ -13,5 +13,7 @@ namespace GroupAPIProject.Models.User
         [Required]
 		
 		public string Password { get; set; }
+
     }
+    
 }

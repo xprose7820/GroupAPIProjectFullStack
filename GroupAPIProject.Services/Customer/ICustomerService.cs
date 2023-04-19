@@ -8,9 +8,13 @@ namespace GroupAPIProject.Services.Customer
 {
     public interface ICustomerService
     {
-        Task<bool> CreateCustomerAsyn(CustomerRegister newCustomer);
+        Task<bool> CreateCustomerAsync(CustomerRegister newCustomer);
 
-        Task<bool> RemoveCustomerAsyn(CustomerRegister remove);
+        Task<bool> RemoveCustomerAsync(CustomerRegister remove);
+
+        Task<bool> UpdateCustomerAsync(CustomerRegister update);
+
+        Task<IEnumerable<CustomerList>> GetCustomerListsAsyn();
 
     }
 }
