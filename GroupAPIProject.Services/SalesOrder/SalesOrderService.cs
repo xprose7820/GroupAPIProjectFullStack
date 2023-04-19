@@ -39,7 +39,9 @@ namespace GroupAPIProject.Services.SalesOrder
             }
             InventoryItemEntity inventoryItemExists = await _dbContext.Locations.Where(entity => entity.Id == _retailerId)
                 .Include(g => g.ListOfInventoryItems).SelectMany(g => g.ListOfInventoryItems).FirstOrDefaultAsync(g => g.Id == model.InventoryItemId);
-
+            if(inventoryItemExists is null){
+                return false;
+            }
             
             // RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
             // if (retailerExists is null)
