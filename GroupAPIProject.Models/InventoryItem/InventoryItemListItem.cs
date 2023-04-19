@@ -10,7 +10,6 @@ namespace GroupAPIProject.Models.InventoryItem
     public class InventoryItemListItem
     {
         public int Id { get; set; }
-        [ForeignKey("Location")]
         public int LocationId { get; set; }
         public int Stock { get; set; }
     }

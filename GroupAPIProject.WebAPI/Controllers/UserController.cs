@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using GroupAPIProject.Models.User;
 using GroupAPIProject.Services.Token;
 using GroupAPIProject.Services.User;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GroupAPIProject.WebAPI.Controllers
@@ -40,6 +39,5 @@ namespace GroupAPIProject.WebAPI.Controllers
             return BadRequest("User could not be created.");
 
         }
-
-    }   
+    }      
 }

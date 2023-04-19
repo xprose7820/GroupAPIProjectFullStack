@@ -20,8 +20,13 @@ namespace GroupAPIProject.Data.Entities
         public int RetailerId { get; set; }
         public virtual RetailerEntity Retailer { get; set; }
         [Required]
+        [ForeignKey("Location")]
+        public int LocationId { get; set; }
+        public virtual LocationEntity Location { get; set; }
+        
+        [Required]
         public DateTimeOffset OrderDate { get; set; }
-        public virtual List<SalesOrderItemEntity> ListOfSalesOrderItems{get;set;} = new List<SalesOrderItemEntity>();
+        public virtual List<SalesOrderItemEntity>? ListOfSalesOrderItems{get;set;} = new List<SalesOrderItemEntity>();
 
     }
 }

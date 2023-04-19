@@ -28,26 +28,54 @@ namespace GroupAPIProject.Services.SalesOrder
             _dbContext = dbContext;
         }
         public async Task<bool> CreateSalesOrderAsync(SalesOrderCreate model){
+
             RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
-            if (retailerExists is null)
-            {
+            if(retailerExists is null){
                 return false;
             }
-            // SupplierEntity supplierExists = await _dbContext.Suppliers.FirstOrDefaultAsync(g => g.Id == model.SupplierId);
-            CustomerEntity customerExists = await _dbContext.Customers.FindAsync(model.CusomterId);
-
-            if (customerExists is null)
-            {
+            CustomerEntity customerExists = await _dbContext.Customers.FindAsync(model.CustomerId);
+            if (customerExists is null){
+                return false;
+            }
+            LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.Id == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
+            if(locationExists is null){
                 return false;
             }
             SalesOrderEntity entity = new SalesOrderEntity{
-                CusomterId = model.CusomterId,
-                RetailerId = _retailerId,
-                OrderDate = DateTime.Now
+                    CusomterId = model.CustomerId,
+                    RetailerId = model.RetailerId,
+                    LocationId = model.LocationId,
+                    OrderDate = DateTime.Now
             };
             _dbContext.SalesOrders.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
+            
+            // RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
+            // if (retailerExists is null)
+            // {
+            //     return false;
+            // }
+            // LocationEntity locationExists = await _dbContext.Locations.FindAsync(model.LocationId);
+            // if(locationExists is null){
+            //     return false;
+            // }
+            // // SupplierEntity supplierExists = await _dbContext.Suppliers.FirstOrDefaultAsync(g => g.Id == model.SupplierId);
+            // CustomerEntity customerExists = await _dbContext.Customers.FindAsync(model.CusomterId);
+
+            // if (customerExists is null)
+            // {
+            //     return false;
+            // }
+            // SalesOrderEntity entity = new SalesOrderEntity{
+            //     CusomterId = model.CusomterId,
+            //     RetailerId = _retailerId,
+            //     LocationId = model.LocationId,
+            //     OrderDate = DateTime.Now
+            // };
+            // _dbContext.SalesOrders.Add(entity);
+            // int numberOfChanges = await _dbContext.SaveChangesAsync();
+            // return numberOfChanges == 1;
         }
         public async Task<bool> UpdateSalesOrderAsync(SalesOrderUpdate model){
             SalesOrderEntity salesOrderExists = await _dbContext.SalesOrders.FindAsync(model.Id);
