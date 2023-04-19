@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using GroupAPIProject.Models.Supplier;
 using GroupAPIProject.Services.Supplier;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GroupAPIProject.WebAPI.Controllers
 {
+    [Authorize("Roles=AdminEntity")]
     [ApiController]
     [Route("api/[controller]")]
     public class SupplierController : ControllerBase

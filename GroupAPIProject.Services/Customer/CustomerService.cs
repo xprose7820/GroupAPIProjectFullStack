@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GroupAPIProject.Services.Customer
 {
-    public class CustomerService
+    public class CustomerService : ICustomerService
     {
         private readonly ApplicationDbContext _context;
 

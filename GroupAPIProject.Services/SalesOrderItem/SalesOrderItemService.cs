@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GroupAPIProject.Services.SalesOrderItem
 {
-    public class SalesOrderItemService
+    public class SalesOrderItemService : ISalesOrderItemService
     {
         private readonly int _retailerId;
         private readonly ApplicationDbContext _dbContext;
@@ -96,17 +96,17 @@ namespace GroupAPIProject.Services.SalesOrderItem
 
         }
 
-        public async Task<bool> UpdateSalesOrderItemAsync(SalesOrderItemUpdate model){
-            SalesOrderItemEntity salesOrderItemExists = await _dbContext.SalesOrderItems.FindAsync(model.Id);
-            if(salesOrderItemExists is null || salesOrderItemExists.RetailerId != _retailerId){
-                return false;
-            }
-            int originalQuantity = salesOrderItemExists.Quantity;
-            salesOrderItemExists.Quantity = model.Quantity;
-            // need to update the inventory item/ location
-            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FirstAsync()
+        // public async Task<bool> UpdateSalesOrderItemAsync(SalesOrderItemUpdate model){
+        //     SalesOrderItemEntity salesOrderItemExists = await _dbContext.SalesOrderItems.FindAsync(model.Id);
+        //     if(salesOrderItemExists is null || salesOrderItemExists.RetailerId != _retailerId){
+        //         return false;
+        //     }
+        //     int originalQuantity = salesOrderItemExists.Quantity;
+        //     salesOrderItemExists.Quantity = model.Quantity;
+        //     // need to update the inventory item/ location
+        //     InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FirstAsync()
             
-        }
+        // }
 
 
 
