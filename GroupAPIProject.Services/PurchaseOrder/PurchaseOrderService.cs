@@ -82,7 +82,6 @@ namespace GroupAPIProject.Services.PurchaseOrder
             purchaseOrderExists.SupplierId = model.SupplierId;
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
-
         }
         
 
