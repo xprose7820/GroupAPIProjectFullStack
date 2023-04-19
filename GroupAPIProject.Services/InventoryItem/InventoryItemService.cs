@@ -35,7 +35,10 @@ namespace GroupAPIProject.Services.InventoryItem
             if(purchaseOrderItemExists is null){
                 return false;
             }
-            
+            LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
+            if(locationExists is null){
+                return false;
+            }
             if(purchaseOrderItemExists.Quantity == 0){
                 return false;
             }
@@ -49,6 +52,7 @@ namespace GroupAPIProject.Services.InventoryItem
 
             purchaseOrderItemExists.Quantity = 0;
 
+            _dbContext.InventoryItems.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 2;
             // handle renaming purchaseorderitem
