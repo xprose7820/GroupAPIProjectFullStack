@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using GroupAPIProject.Models.Location;
 using GroupAPIProject.Services.Location;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GroupAPIProject.WebAPI.Controllers
 {
+    [Authorize("Roles=RetailerEntity")]
     [ApiController]
     [Route("api/[controller]")]
     public class LocationController : ControllerBase
