@@ -29,44 +29,66 @@ namespace GroupAPIProject.Services.PurchaseOrderItem
 
         public async Task<bool> CreatePurchaseOrderItemAsync(PurchaseOrderItemCreate model)
         {
-            RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
-            if (retailerExists is null)
-            {
-                return false;
-            }
-            // SupplierEntity supplierExists = await _dbContext.Suppliers.FirstOrDefaultAsync(g => g.Id == model.SupplierId);
-            ProductEntity productExists = await _dbContext.Products.FindAsync(model.ProductId);
-
-            if (productExists is null)
-            {
-                return false;
-            }
-            // check if supplier contains product 
-            SupplierEntity supplierExists = await _dbContext.Suppliers.FindAsync(productExists.SupplierId);
-            if(supplierExists is null){
-                return false;
-            }
+            
             PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.PurchaseOrderId);
-
-            if (purchaseOrderExists is null || purchaseOrderExists.RetailerId != _retailerId)
-            {
+            if(purchaseOrderExists is null){
+                return false;
+            }
+            // checks if the product exists in the PurchaseOrder's Supplier's list of products
+            ProductEntity productExists = await _dbContext.Suppliers.Where(g => g.Id == purchaseOrderExists.SupplierId)
+                .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.Id == model.ProductId);
+            if(productExists is null){
                 return false;
             }
 
-            PurchaseOrderItemEntity entity = new PurchaseOrderItemEntity
-            {
-                RetailerId = _retailerId,
-                ProductId = model.ProductId,
-                PurchaseOrderId = model.PurchaseOrderId,
-                Quantity = model.Quantity,
-                Price = productExists.Price
+            PurchaseOrderItemEntity entity = new PurchaseOrderItemEntity{
+                    PurchaseOrderId = model.PurchaseOrderId,
+                    ProductId = model.ProductId,
+                    Quantity = model.Quantity,
+                    Price = model.Price
             };
-            // aftr creating a PurchaseOrderItemEntity, need to later add to an existing InventoryItem
-
-
             _dbContext.PurchaseOrderItems.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
+
+            // RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
+            // if (retailerExists is null)
+            // {
+            //     return false;
+            // }
+            // // SupplierEntity supplierExists = await _dbContext.Suppliers.FirstOrDefaultAsync(g => g.Id == model.SupplierId);
+            // ProductEntity productExists = await _dbContext.Products.FindAsync(model.ProductId);
+
+            // if (productExists is null)
+            // {
+            //     return false;
+            // }
+            // // check if supplier contains product 
+            // SupplierEntity supplierExists = await _dbContext.Suppliers.FindAsync(productExists.SupplierId);
+            // if(supplierExists is null){
+            //     return false;
+            // }
+            // PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.PurchaseOrderId);
+
+            // if (purchaseOrderExists is null || purchaseOrderExists.RetailerId != _retailerId)
+            // {
+            //     return false;
+            // }
+
+            // PurchaseOrderItemEntity entity = new PurchaseOrderItemEntity
+            // {
+            //     RetailerId = _retailerId,
+            //     ProductId = model.ProductId,
+            //     PurchaseOrderId = model.PurchaseOrderId,
+            //     Quantity = model.Quantity,
+            //     Price = productExists.Price
+            // };
+            // // aftr creating a PurchaseOrderItemEntity, need to later add to an existing InventoryItem
+
+
+            // _dbContext.PurchaseOrderItems.Add(entity);
+            // int numberOfChanges = await _dbContext.SaveChangesAsync();
+            // return numberOfChanges == 1;
 
         }
         // public async Task<bool> UpdatePurchaseOrderItemAsync(PurchaseOrderItemUpdate model)
