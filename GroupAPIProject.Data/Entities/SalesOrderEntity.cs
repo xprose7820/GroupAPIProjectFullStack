@@ -15,15 +15,14 @@ namespace GroupAPIProject.Data.Entities
         [ForeignKey("Customer")]
         public int CusomterId { get; set; }
         public virtual CustomerEntity Customer { get; set; }
-
-        [Required]
-        [ForeignKey("Location")]
-        public int LocationId { get; set; }
-        public virtual LocationEntity Location { get; set; }
         [Required]
         [ForeignKey("Retailer")]
         public int RetailerId { get; set; }
         public virtual RetailerEntity Retailer { get; set; }
+        [Required]
+        [ForeignKey("InventoryItem")]
+        public int InventoryItemId { get; set; }
+        public virtual InventoryItemEntity InventoryItem { get; set; }
         [Required]
         public DateTimeOffset OrderDate { get; set; }
         public virtual List<SalesOrderItemEntity> ListOfSalesOrderItems{get;set;} = new List<SalesOrderItemEntity>();

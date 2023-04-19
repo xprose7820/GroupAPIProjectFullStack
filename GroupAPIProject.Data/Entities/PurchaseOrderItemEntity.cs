@@ -15,17 +15,13 @@ namespace GroupAPIProject.Data.Entities
         [ForeignKey("PurchaseOrder")]
         public int PurchaseOrderId { get; set; }
         public virtual PurchaseOrderEntity PurchaseOrder { get; set; }
+        // should pull product name from Purchase then supplier then product 
         [Required]
-        [ForeignKey("Retailer")]
-        public int RetailerId { get; set; }
-        public virtual RetailerEntity Retailer { get; set; }
-        [Required]
-        [ForeignKey("Product")]
-        public int ProductId { get; set; }
-        public virtual ProductEntity Product { get; set; }
+        public int ProductName { get; set; }
         [Required]
         public int Quantity { get; set; }
         [Required]
         public double Price { get; set; }
+        public virtual List<InventoryItemEntity> ListOfInventoryItems{get;set;} = new List<InventoryItemEntity>();
     }
 }

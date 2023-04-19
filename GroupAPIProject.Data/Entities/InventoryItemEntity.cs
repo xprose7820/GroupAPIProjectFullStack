@@ -11,24 +11,23 @@ namespace GroupAPIProject.Data.Entities
     {
         [Key]
         public int Id{ get; set; }
+        
         [Required]
-        [ForeignKey("Product")]
-        public int ProductId{ get ;set; }
-        public virtual ProductEntity Product{ get; set; }
+        [ForeignKey("PurchaseOrderItem")]
+        public int PurchaseOrderItemId{ get ;set; }
+        public virtual PurchaseOrderItemEntity PurchaseOrderItem{ get; set; }
+        // should pull productName from purchaseOrderItem, not directly from anywhere else
         [Required]
-        [ForeignKey("PurchaseOrder")]
-        public int PurchaseOrderId{ get ;set; }
-        public virtual PurchaseOrderEntity PurchaseOrder{ get; set; }
+        public string ProductName{ get ;set; }
+
         [Required]
         [ForeignKey("Location")]
         public int LocationId{ get; set; }
         public virtual LocationEntity Location{ get; set; }
-        [Required]
-        [ForeignKey("Retailer")]
-        public int RetailerId { get; set; }
-        public virtual RetailerEntity Retailer { get; set; }
+        
         [Required]
         public int Stock{ get; set; }
+        
 
     }
 }

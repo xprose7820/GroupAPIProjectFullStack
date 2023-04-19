@@ -13,5 +13,6 @@ namespace GroupAPIProject.Data.Entities
         [Required]
         public string SupplierName{get;set;}
         public virtual List<ProductEntity> Products{get;set;} = new List<ProductEntity>();
+        public virtual List<PurchaseOrderEntity> PurchaseOrders{get;set;} = new List<PurchaseOrderEntity>();
     }
 }
