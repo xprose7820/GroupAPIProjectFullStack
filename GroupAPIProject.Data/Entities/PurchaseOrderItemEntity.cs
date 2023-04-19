@@ -17,7 +17,7 @@ namespace GroupAPIProject.Data.Entities
         public virtual PurchaseOrderEntity PurchaseOrder { get; set; }
         // should pull product name from Purchase then supplier then product 
         [Required]
-        public int ProductName { get; set; }
+        public int ProductId { get; set; }
         [Required]
         public int Quantity { get; set; }
         [Required]
