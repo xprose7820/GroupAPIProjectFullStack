@@ -37,11 +37,19 @@ namespace GroupAPIProject.Services.SalesOrder
             if (customerExists is null){
                 return false;
             }
-            InventoryItemEntity inventoryItemExists = await _dbContext.Locations.Where(entity => entity.Id == _retailerId)
-                .Include(g => g.ListOfInventoryItems).SelectMany(g => g.ListOfInventoryItems).FirstOrDefaultAsync(g => g.Id == model.InventoryItemId);
-            if(inventoryItemExists is null){
+            LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.Id == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
+            if(locationExists is null){
                 return false;
             }
+            SalesOrderEntity entity = new SalesOrderEntity{
+                    CusomterId = model.CustomerId,
+                    RetailerId = model.RetailerId,
+                    LocationId = model.LocationId,
+                    OrderDate = DateTime.Now
+            };
+            _dbContext.SalesOrders.Add(entity);
+            int numberOfChanges = await _dbContext.SaveChangesAsync();
+            return numberOfChanges == 1;
             
             // RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
             // if (retailerExists is null)

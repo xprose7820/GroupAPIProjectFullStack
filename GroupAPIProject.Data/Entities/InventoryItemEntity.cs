@@ -27,7 +27,7 @@ namespace GroupAPIProject.Data.Entities
         
         [Required]
         public int Stock{ get; set; }
-        public virtual List<SalesOrderEntity> ListOfSalesOrders{get;set;} = new List<SalesOrderEntity>();
+        
 
     }
 }

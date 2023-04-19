@@ -9,12 +9,13 @@ namespace GroupAPIProject.Data.Entities
 {
     public class PurchaseOrderItemEntity
     {
+
         [Key]
         public int Id { get; set; }
         [Required]
         [ForeignKey("PurchaseOrder")]
         public int PurchaseOrderId { get; set; }
-        public virtual PurchaseOrderEntity PurchaseOrder { get; set; }
+        public virtual PurchaseOrderEntity? PurchaseOrder { get; set; }
         // should pull product name from Purchase then supplier then product 
         [Required]
         public int ProductId { get; set; }
@@ -22,6 +23,6 @@ namespace GroupAPIProject.Data.Entities
         public int Quantity { get; set; }
         [Required]
         public double Price { get; set; }
-       
+
     }
 }

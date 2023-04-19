@@ -19,8 +19,9 @@ namespace GroupAPIProject.Data.Entities
         [Required]
         [ForeignKey("Retailer")]
         public int RetailerId { get; set; }
-        public virtual RetailerEntity Retailer { get; set; }
-        public virtual List<InventoryItemEntity> ListOfInventoryItems { get; set; } = new List<InventoryItemEntity>();
+        public virtual RetailerEntity? Retailer { get; set; }
+        public virtual List<InventoryItemEntity>? ListOfInventoryItems { get; set; } = new List<InventoryItemEntity>();
+        public virtual List<SalesOrderEntity>? ListOfSalesOrders{get;set;} = new List<SalesOrderEntity>();
         
     }
 }

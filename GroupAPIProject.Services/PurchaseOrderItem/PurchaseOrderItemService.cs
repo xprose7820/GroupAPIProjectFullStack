@@ -30,7 +30,7 @@ namespace GroupAPIProject.Services.PurchaseOrderItem
         public async Task<bool> CreatePurchaseOrderItemAsync(PurchaseOrderItemCreate model)
         {
             
-            PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.PurchaseOrderId);
+            PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.PurchaseOrderId);
             if(purchaseOrderExists is null){
                 return false;
             }
