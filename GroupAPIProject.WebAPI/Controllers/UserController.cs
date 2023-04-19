@@ -41,6 +41,5 @@ namespace GroupAPIProject.WebAPI.Controllers
 
         }
 
-        }   
-    }
+    }   
 }

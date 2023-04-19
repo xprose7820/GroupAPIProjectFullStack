@@ -14,7 +14,7 @@ namespace GroupAPIProject.Services.Customer
 
         Task<bool> UpdateCustomerAsync(CustomerRegister update);
 
-        
+        Task<IEnumerable<CustomerList>> GetCustomerListsAsyn();
 
     }
 }
