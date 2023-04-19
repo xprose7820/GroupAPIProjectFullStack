@@ -102,19 +102,6 @@ namespace GroupAPIProject.Services.InventoryItem
 
         public async Task<bool> InventoryItemUpdate(InventoryItemUpdate model)
         {
-            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.Id);
-            if (inventoryItemExists == null || inventoryItemExists.RetailerId != _retailerId)
-            {
-                return false;
-            }
-            else
-            {
-                inventoryItemExists.Stock = model.Stock;
-            }
-
-            int originalStock = inventoryItemExists.Stock;
-            inventoryItemExists.Stock = model.Stock;
-
             PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.PurchaseOrderId);
             if (purchaseOrderExists == null || purchaseOrderExists.Retailer.Id != _retailerId)
             {
@@ -125,9 +112,17 @@ namespace GroupAPIProject.Services.InventoryItem
             {
                 return false;
             }
-            locationExists.Capacity = model.Stock;
+            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.Id);
+            if (inventoryItemExists == null || inventoryItemExists.RetailerId != _retailerId)
+            {
+                return false;
+            }
+            else
+            {
+                inventoryItemExists.LocationId = model.LocationId;
+            }
             int numberOfChanges = await _dbContext.SaveChangesAsync();
-            return numberOfChanges == 2;
+            return numberOfChanges == 1;
         }
     }
 }
