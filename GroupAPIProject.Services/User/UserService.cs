@@ -62,29 +62,16 @@ namespace GroupAPIProject.Services.User
             return await _context.SaveChangesAsync() == 1;
         }
 
-        public async Task<IEnumerable<UserList>> GetUserListAsync(UserCreate user)
+        public async Task<IEnumerable<UserList>> GetUserListAsync()
         {
-            if (user.Role == "Admin")
-            {
-                var userlist = await _context.Users.Select(entity => new UserList
-                {
-                    Id = entity.Id,
-                    UserName = entity.Username
-                }).ToListAsync();
 
-                return userlist;
-            }
-            if (user.Role == "Retailer")
+            IEnumerable<UserList> users = await _context.Users.Select(entity => new UserList
             {
-                var userList = await _context.Users.Select(entity => new UserList
-                {
-                    Id = entity.Id,
-                    UserName = entity.Username
-                }).ToListAsync();
-
-                return userList;
-            }
-            
+                Role = entity.GetType().Name,
+                Id = entity.Id,
+                UserName = entity.Username
+            }).ToListAsync();
+            return users;
         }
 
         // public async Task<bool> UpdateUserAsync(UserCreate update)
