@@ -9,6 +9,7 @@ namespace GroupAPIProject.Data.Entities
 {
     public class PurchaseOrderItemEntity
     {
+
         [Key]
         public int Id { get; set; }
         [Required]
@@ -22,6 +23,6 @@ namespace GroupAPIProject.Data.Entities
         public int Quantity { get; set; }
         [Required]
         public double Price { get; set; }
-       
+
     }
 }
