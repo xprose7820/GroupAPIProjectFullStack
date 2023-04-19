@@ -18,7 +18,6 @@ namespace GroupAPIProject.Data.Entities
         // should pull Productname from SalesOrder which pulls from Inventoryitem
         [Required]
         public int ProductName { get; set; }
-
         [Required]
         public int Quantity { get; set; }
         [Required]

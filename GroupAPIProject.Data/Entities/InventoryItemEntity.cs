@@ -13,10 +13,10 @@ namespace GroupAPIProject.Data.Entities
         public int Id{ get; set; }
         
         [Required]
-        [ForeignKey("PurchaseOrderItem")]
-        public int PurchaseOrderItemId{ get ;set; }
-        public virtual PurchaseOrderItemEntity PurchaseOrderItem{ get; set; }
-        // should pull productName from purchaseOrderItem, not directly from anywhere else
+        [ForeignKey("PurchaseOrder")]
+        public int PurchaseOrderId{ get ;set; }
+        public virtual PurchaseOrderEntity PurchaseOrder{ get; set; }
+        // should pull productName from purchaseOrder, then purchaseOrderItem
         [Required]
         public string ProductName{ get ;set; }
 
@@ -27,7 +27,7 @@ namespace GroupAPIProject.Data.Entities
         
         [Required]
         public int Stock{ get; set; }
-        
+        public virtual List<SalesOrderEntity> ListOfSalesOrders{get;set;} = new List<SalesOrderEntity>();
 
     }
 }

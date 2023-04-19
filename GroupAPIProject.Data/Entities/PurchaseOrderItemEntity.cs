@@ -22,6 +22,6 @@ namespace GroupAPIProject.Data.Entities
         public int Quantity { get; set; }
         [Required]
         public double Price { get; set; }
-        public virtual List<InventoryItemEntity> ListOfInventoryItems{get;set;} = new List<InventoryItemEntity>();
+       
     }
 }

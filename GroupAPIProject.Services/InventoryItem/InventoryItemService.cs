@@ -29,6 +29,7 @@ namespace GroupAPIProject.Services.InventoryItem
         }
         public async Task<bool> CreateInventoryItemAsync(InventoryItemCreate model)
         {
+            PurchaseOrderItemEntity blah = await _dbContext.PurchaseOrders.Include(g => g.ListOfPurchaseOrderItems).FirstOrDefaultAsync()
             RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
             if (retailerExists == null || retailerExists.Id == _retailerId)
             {

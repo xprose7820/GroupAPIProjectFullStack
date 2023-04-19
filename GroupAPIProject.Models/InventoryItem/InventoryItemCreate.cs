@@ -12,7 +12,6 @@ namespace GroupAPIProject.Models.InventoryItem
         public int PurchaseOrderId{get;set;}
         public int ProductId { get; set; }
         public int LocationId { get; set; }
-        public int RetailerId { get; set; }
         public int Stock { get; set; }
     }
 }
