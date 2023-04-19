@@ -24,7 +24,7 @@ namespace GroupAPIProject.WebAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> RemoveCustomer([FromBody] string customerName)
+        public async Task<IActionResult> RemoveCustomer([FromBody] CustomerRegister customerName)
         {
             return await _customerService.RemoveCustomerAsync(customerName)
                 ? Ok("Customer was deleted successfully.")
@@ -52,6 +52,13 @@ namespace GroupAPIProject.WebAPI.Controllers
             return await _customerService.UpdateCustomerAsync(update)
                 ? Ok("Customer was updated successfully.")
                 : BadRequest("Customer was unable to be updated.");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCustomerList()
+        {
+            var customer = await _customerService.GetCustomerListsAsyn();
+            return Ok(customer);
         }
     }
 }

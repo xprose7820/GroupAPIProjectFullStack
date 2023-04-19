@@ -39,7 +39,5 @@ namespace GroupAPIProject.WebAPI.Controllers
             return BadRequest("User could not be created.");
 
         }
-
-          
-    }
+    }      
 }
