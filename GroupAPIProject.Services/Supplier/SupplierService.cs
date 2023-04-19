@@ -47,8 +47,7 @@ namespace GroupAPIProject.Services.Supplier
             var SupplierDetail = new SupplierDetail
             {
                 Id = entity.Id,
-                SupplierName = entity.SupplierName,
-                Products = entity.Products,
+                SupplierName = entity.SupplierName
             };
 
             return SupplierDetail;

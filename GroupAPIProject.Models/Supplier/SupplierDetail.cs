@@ -10,7 +10,5 @@ namespace GroupAPIProject.Models.Supplier
     {
         public int Id{get;set;}
         public string SupplierName { get; set; }
-
-        public virtual List<ProductEntity> Products{get;set;} = new List<ProductEntity>();
     }
 }
