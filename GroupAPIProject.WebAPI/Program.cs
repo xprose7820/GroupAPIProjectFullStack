@@ -66,7 +66,21 @@ builder.Services.AddAuthorization(options =>
             var user = context.User;
             return user.HasClaim(c => c.Type == "Role" && c.Value == "AdminEntity");
         });
-    });
+    }
+    
+    
+    );
+     options.AddPolicy("CustomRetailerEntity", policy =>
+    {
+        policy.RequireAssertion(context =>
+        {
+            var user = context.User;
+            return user.HasClaim(c => c.Type == "Role" && c.Value == "RetailerEntity");
+        });
+    }
+    
+    
+    );
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
