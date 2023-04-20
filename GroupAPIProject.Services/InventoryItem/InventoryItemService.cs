@@ -101,27 +101,27 @@ namespace GroupAPIProject.Services.InventoryItem
             // return numberOfChanges == 3;
         }
 
-        public async Task<bool> InventoryItemUpdate(InventoryItemUpdate model)
-        {
-            
-            LocationEntity? locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
-            if (locationExists == null)
-            {
-                return false;
-            }
-            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.Id);
-            if (inventoryItemExists == null || inventoryItemExists.RetailerId != _retailerId)
-            {
-                return false;
-            }
-            else
-            {
-                inventoryItemExists.LocationId = model.LocationId;
-            }
-
-            int numberOfChanges = await _dbContext.SaveChangesAsync();
-            return numberOfChanges == 1;
-        }
+        //public async Task<bool> InventoryItemUpdate(InventoryItemUpdate model)
+        //{
+        //    
+        //    LocationEntity? locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
+        //    if (locationExists == null)
+        //    {
+        //        return false;
+        //    }
+        //    InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.Id);
+        //    if (inventoryItemExists == null || inventoryItemExists.RetailerId != _retailerId)
+        //    {
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        inventoryItemExists.LocationId = model.LocationId;
+        //    }
+        //
+        //    int numberOfChanges = await _dbContext.SaveChangesAsync();
+        //    return numberOfChanges == 1;
+        //}
 
     }
 }

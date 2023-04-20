@@ -42,7 +42,7 @@ namespace GroupAPIProject.Services.Product
 
         public async Task<bool> UpdateProductAsync(ProductUpdate model)
         {
-            ProductEntity productExists = await _dbContext.Products.FindAsync(model.Id);
+            ProductEntity productExists = await _dbContext.Suppliers.
             if (productExists == null || productExists.SupplierId != _supplier.Id)
             {
                 return false;
