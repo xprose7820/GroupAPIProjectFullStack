@@ -113,7 +113,7 @@ namespace GroupAPIProject.Services.InventoryItem
                 return false;
             }
             InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.Id);
-            if (inventoryItemExists == null || inventoryItemExists.RetailerId != _retailerId)
+            if (inventoryItemExists == null)
             {
                 return false;
             }
