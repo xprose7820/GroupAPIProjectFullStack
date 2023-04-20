@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace GroupAPIProject.WebAPI.Controllers
 {   
 
-    
+    [Authorize(Policy = "CustomAdminEntity")]
     [ApiController]
     [Route("api/[controller]")]
     public class SupplierController : ControllerBase
@@ -21,7 +21,7 @@ namespace GroupAPIProject.WebAPI.Controllers
         {
             _supplierService = supplierService;
         }
-        [Authorize(Roles = "AdminEntity")]
+        
         [HttpPost]
         public async Task<IActionResult> CreateSupplier(SupplierCreate model)
         {
