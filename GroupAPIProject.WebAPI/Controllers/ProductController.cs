@@ -1,4 +1,5 @@
-﻿using GroupAPIProject.Models.Product;
+﻿using GroupAPIProject.Data.Entities;
+using GroupAPIProject.Models.Product;
 using GroupAPIProject.Services.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,28 +30,28 @@ namespace GroupAPIProject.WebAPI.Controllers
             }
             return BadRequest("Product Creation Failed");
         }
-        [HttpGet]
-        public async Task<IActionResult> GetProductListBySupplier()
+        [HttpGet("{supplierId}")]
+        public async Task<IActionResult> GetProductListBySupplierId([FromRoute] int supplierId)
         {
             if (!ModelState.IsValid) 
             {
                 return BadRequest(ModelState);
             }
-            if (await _productService.GetProductListAsync(model))
+            if (await _productService.GetProductListAsync(supplierId) is null)
             {
-                return Ok("Get Product List Worked");
+                return BadRequest("Get Method Failed");
             }
-            return BadRequest("Get Method Failed");
+            return Ok("Get Product List Worked");
         }
-        [HttpGet]
-        public async Task<IActionResult> GetProductDetails(ProductDetail model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetProductDetails(ProductDetail model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    
+        //}
 
         [HttpPut]
         public async Task<IActionResult> UpdateProduct([FromBody] ProductUpdate model)
