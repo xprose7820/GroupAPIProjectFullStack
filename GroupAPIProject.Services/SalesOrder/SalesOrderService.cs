@@ -77,15 +77,15 @@ namespace GroupAPIProject.Services.SalesOrder
             // int numberOfChanges = await _dbContext.SaveChangesAsync();
             // return numberOfChanges == 1;
         }
-        public async Task<bool> UpdateSalesOrderAsync(SalesOrderUpdate model){
-            SalesOrderEntity salesOrderExists = await _dbContext.SalesOrders.FindAsync(model.Id);
-            if(salesOrderExists is null || salesOrderExists.RetailerId != _retailerId){
-                return false;
-            }
-            salesOrderExists.CusomterId = model.CusomterId;
-            int numberOfChanges = await _dbContext.SaveChangesAsync();
-            return numberOfChanges == 1;
-        }
+        // public async Task<bool> UpdateSalesOrderAsync(SalesOrderUpdate model){
+        //     SalesOrderEntity salesOrderExists = await _dbContext.SalesOrders.FindAsync(model.Id);
+        //     if(salesOrderExists is null || salesOrderExists.RetailerId != _retailerId){
+        //         return false;
+        //     }
+        //     salesOrderExists.CusomterId = model.CusomterId;
+        //     int numberOfChanges = await _dbContext.SaveChangesAsync();
+        //     return numberOfChanges == 1;
+        // }
 
     }
 }
