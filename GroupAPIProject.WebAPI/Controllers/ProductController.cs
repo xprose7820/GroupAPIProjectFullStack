@@ -27,7 +27,43 @@ namespace GroupAPIProject.WebAPI.Controllers
             {
                 return Ok("Product Was Created");
             }
-            return BadRequest("Product Creation Faield");
+            return BadRequest("Product Creation Failed");
         }
+        // [HttpGet]
+        // public async Task<IActionResult> GetProductListBySupplier()
+        // {
+        //     if (!ModelState.IsValid) 
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
+        //     if (await _productService.GetProductListAsync(model))
+        //     {
+        //         return Ok("Get Product List Worked");
+        //     }
+        //     return BadRequest("Get Method Failed");
+        // }
+        // [HttpGet]
+        // public async Task<IActionResult> GetProductDetails(ProductDetail model)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
+            
+        // }
+
+        // [HttpPut]
+        // public async Task<IActionResult> UpdateProduct([FromBody] ProductUpdate model)
+        // {
+        //     if (!ModelState.IsValid) 
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
+        //     if (await _productService.UpdateProductAsync(model))
+        //     {
+        //         return Ok("Product was Updated");
+        //     }
+        //     return BadRequest("Product Update Failed");
+        // }
     }
 }
