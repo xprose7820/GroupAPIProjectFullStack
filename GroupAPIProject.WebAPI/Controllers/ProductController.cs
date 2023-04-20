@@ -29,6 +29,7 @@ namespace GroupAPIProject.WebAPI.Controllers
             }
             return BadRequest("Product Creation Failed");
         }
+        
         [HttpGet]
         public async Task<IActionResult> GetProductListBySupplier()
         {
@@ -42,15 +43,16 @@ namespace GroupAPIProject.WebAPI.Controllers
             }
             return BadRequest("Get Method Failed");
         }
-        [HttpGet]
-        public async Task<IActionResult> GetProductDetails(ProductDetail model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+
+        // [HttpGet]
+        // public async Task<IActionResult> GetProductDetails(ProductDetail model)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
             
-        }
+        // }
 
         [HttpPut]
         public async Task<IActionResult> UpdateProduct([FromBody] ProductUpdate model)

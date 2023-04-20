@@ -21,7 +21,7 @@ namespace GroupAPIProject.WebAPI.Controllers
         {
             _supplierService = supplierService;
         }
-        [Authorize(Roles = "AdminEntity")]
+        [Authorize(Policy = "CustomAdminEntity")]
         [HttpPost]
         public async Task<IActionResult> CreateSupplier(SupplierCreate model)
         {
@@ -36,6 +36,7 @@ namespace GroupAPIProject.WebAPI.Controllers
             return BadRequest("Supplier could not be added to database");
         }
 
+        [Authorize(Policy = "CustomAdminEntity")]
         [HttpDelete]
         public async Task<IActionResult> RemoveSupplierAsync(int SupplierId)
         {
@@ -51,7 +52,7 @@ namespace GroupAPIProject.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSupplierByIdAsync(int SupplierId)
+        public async Task<IActionResult> GetSupplierByIdAsync([FromRoute]int SupplierId)
         {
            var SupplierToDisplay = await _supplierService.GetSupplierByIdAsync(SupplierId);
             return Ok(SupplierToDisplay);
