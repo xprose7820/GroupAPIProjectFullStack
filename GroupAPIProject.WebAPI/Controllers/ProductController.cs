@@ -9,7 +9,7 @@ namespace GroupAPIProject.WebAPI.Controllers
     [Authorize("Roles=AdminEntity")]
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController
+    public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
         public ProductController(IProductService productService) 
