@@ -26,9 +26,9 @@ namespace GroupAPIProject.Services.Supplier
             return numberOfChanges == 1;
         }
 
-        public async Task<bool> RemoveSupplierAsync(string SupplierName)
+        public async Task<bool> RemoveSupplierAsync(int SupplierId)
         {
-            var supplierEntity = await _context.Suppliers.FirstOrDefaultAsync(s => s.SupplierName == SupplierName);
+            var supplierEntity = await _context.Suppliers.FirstOrDefaultAsync(s => s.Id == SupplierId);
 
             if (supplierEntity == null)
             {
@@ -36,6 +36,20 @@ namespace GroupAPIProject.Services.Supplier
             }
             _context.Suppliers.Remove(supplierEntity);
             return await _context.SaveChangesAsync() == 1;
+        }
+
+        public async Task<SupplierDetail> GetSupplierByIdAsync(int SupplierId)
+        {
+            SupplierEntity entity = await _context.Suppliers.FindAsync(SupplierId);
+            if (entity is null)
+                return null;
+
+            var SupplierDetail = new SupplierDetail
+            {
+                Id = entity.Id,
+                SupplierName = entity.SupplierName
+        };
+            return SupplierDetail;
         }
     }
 }
