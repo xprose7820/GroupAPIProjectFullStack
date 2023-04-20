@@ -101,9 +101,10 @@ namespace GroupAPIProject.Services.InventoryItem
             // return numberOfChanges == 3;
         }
 
-        public async Task<bool> InventoryItemUpdate(InventoryItemUpdate model)
-        {
+        // public async Task<bool> InventoryItemUpdate(InventoryItemUpdate model)
+        // {
             
+
             LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
             if (locationExists == null)
             {
@@ -122,6 +123,7 @@ namespace GroupAPIProject.Services.InventoryItem
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
         }
+
 
     }
 }

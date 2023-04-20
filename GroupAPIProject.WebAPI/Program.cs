@@ -35,13 +35,14 @@ builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<IInventoryItemService, InventoryItemService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+
 builder.Services.AddControllers();
-builder.Services.AddAuthorization(options =>
-    {
-        options.AddPolicy("Admin", policy => policy.RequireClaim("Role", "Admin"));
-        options.AddPolicy("Retailer", policy => policy.RequireClaim("Role", "Retailer"));
-    });
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
 {
     options.RequireHttpsMetadata = false;
     options.SaveToken = true;
@@ -49,11 +50,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     {
         ValidateIssuer = true,
         ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminEntity", policy => policy.RequireRole("AdminEntity"));
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -94,8 +102,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 
 app.UseAuthorization();
+
 
 app.MapControllers();
 
