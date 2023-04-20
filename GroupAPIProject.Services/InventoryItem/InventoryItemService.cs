@@ -32,18 +32,22 @@ namespace GroupAPIProject.Services.InventoryItem
             PurchaseOrderItemEntity purchaseOrderItemExists = await _dbContext.PurchaseOrders.Where(entity => entity.RetailerId == _retailerId).Where(p => p.Id == model.PurchaseOrderId)
                 .Include(g => g.ListOfPurchaseOrderItems).SelectMany(g => g.ListOfPurchaseOrderItems).FirstOrDefaultAsync(g => g.ProductId == model.ProductId);
 
-            if(purchaseOrderItemExists is null){
+            if (purchaseOrderItemExists is null)
+            {
                 return false;
             }
             LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
-            if(locationExists is null){
+            if (locationExists is null)
+            {
                 return false;
             }
-            if(purchaseOrderItemExists.Quantity == 0){
+            if (purchaseOrderItemExists.Quantity == 0)
+            {
                 return false;
             }
 
-            InventoryItemEntity? entity = new InventoryItemEntity{
+            InventoryItemEntity? entity = new InventoryItemEntity
+            {
                 ProductId = model.ProductId,
                 LocationId = model.LocationId,
                 PurchaseOrderId = model.PurchaseOrderId,
@@ -101,27 +105,29 @@ namespace GroupAPIProject.Services.InventoryItem
             // return numberOfChanges == 3;
         }
 
-        // // public async Task<bool> InventoryItemUpdate(InventoryItemUpdate model)
-        // // {
-            
-        //     LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
-        //     if (locationExists == null)
-        //     {
-        //         return false;
-        //     }
-        //     InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.Id);
-        //     if (inventoryItemExists == null)
-        //     {
-        //         return false;
-        //     }
-        //     else
-        //     {
-        //         inventoryItemExists.LocationId = model.LocationId;
-        //     }
-        
-        //     int numberOfChanges = await _dbContext.SaveChangesAsync();
-        //     return numberOfChanges == 1;
-        // }
+        public async Task<bool> InventoryItemUpdate(InventoryItemUpdate model)
+        {
+
+
+            LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
+            if (locationExists == null)
+            {
+                return false;
+            }
+            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.Id);
+            if (inventoryItemExists == null)
+            {
+                return false;
+            }
+            else
+            {
+                inventoryItemExists.LocationId = model.LocationId;
+            }
+
+            int numberOfChanges = await _dbContext.SaveChangesAsync();
+            return numberOfChanges == 1;
+        }
+
 
     }
 }
