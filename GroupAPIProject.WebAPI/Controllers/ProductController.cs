@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
 namespace GroupAPIProject.WebAPI.Controllers
-{[Authorize("Roles=AdminEntity")]
+{
+    [Authorize("Roles=AdminEntity")]
     public class ProductController
     {
     }
