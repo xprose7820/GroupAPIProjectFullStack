@@ -56,7 +56,7 @@ namespace GroupAPIProject.WebAPI.Controllers
             return Ok(tokenResponse);
         }
         [HttpPost("~/api/TokenRetailer")]
-        public async Task<IActionResult> TokenRetalier([FromBody] TokenRequest request)
+        public async Task<IActionResult> TokenRetailer([FromBody] TokenRequest request)
         {
             if (!ModelState.IsValid)
             {
