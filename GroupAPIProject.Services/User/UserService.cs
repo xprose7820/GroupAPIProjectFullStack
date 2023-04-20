@@ -73,6 +73,8 @@ namespace GroupAPIProject.Services.User
             }).ToListAsync();
             return users;
         }
+    }
+}
 
         // public async Task<bool> UpdateUserAsync(UserCreate update)
         // {
