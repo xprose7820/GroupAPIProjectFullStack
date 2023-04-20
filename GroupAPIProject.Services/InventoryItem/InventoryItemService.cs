@@ -109,8 +109,8 @@ namespace GroupAPIProject.Services.InventoryItem
             {
                 return false;
             }
-            InventoryItemEntity? inventoryItemExists = locationExists.ListOfInventoryItems.FirstOrDefault(g => g.Id == model.Id);
-            if (inventoryItemExists == null)
+            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.Id);
+            if (inventoryItemExists == null || inventoryItemExists.RetailerId != _retailerId)
             {
                 return false;
             }
