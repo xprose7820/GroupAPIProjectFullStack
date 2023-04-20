@@ -27,7 +27,7 @@ namespace GroupAPIProject.WebAPI.Controllers
             {
                 return Ok("Inventory Item Was Created");
             }
-            return BadRequest("Inventory Item Creation Faield");
+            return BadRequest("Inventory Item Creation Failed");
         }
     }
 }
