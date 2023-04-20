@@ -10,11 +10,11 @@ namespace GroupAPIProject.Services.Customer
     {
         Task<bool> CreateCustomerAsync(CustomerRegister newCustomer);
 
-        Task<bool> RemoveCustomerAsync(CustomerRegister remove);
+        Task<bool> RemoveCustomerAsync(string name);
 
         Task<bool> UpdateCustomerAsync(CustomerRegister update);
 
-        
+        Task<IEnumerable<CustomerList>> GetCustomerListsAsync();
 
     }
 }

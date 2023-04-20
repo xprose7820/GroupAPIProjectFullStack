@@ -6,12 +6,32 @@ using Microsoft.EntityFrameworkCore;
 using GroupAPIProject.Data.Entities;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using GroupAPIProject.Services.PurchaseOrder;
+using GroupAPIProject.Services.PurchaseOrderItem;
+using GroupAPIProject.Services.SalesOrder;
+using GroupAPIProject.Services.SalesOrderItem;
+using GroupAPIProject.Services.Supplier;
+using GroupAPIProject.Services.Customer;
+using GroupAPIProject.Services.Product;
+using GroupAPIProject.Services.InventoryItem;
+using GroupAPIProject.Services.Location;
+using GroupAPIProject.Services.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sqlOptions => sqlOptions.EnableRetryOnFailure()));
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+builder.Services.AddScoped<IPurchaseOrderItemService, PurchaseOrderItemService>();
+builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
+builder.Services.AddScoped<ISalesOrderItemService, SalesOrderItemService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ISupplierService, SupplierService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IInventoryItemService, InventoryItemService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers();
 builder.Services.AddAuthorization(options =>

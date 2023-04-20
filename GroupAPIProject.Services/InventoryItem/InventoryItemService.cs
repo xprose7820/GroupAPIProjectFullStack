@@ -18,9 +18,9 @@ namespace GroupAPIProject.Services.InventoryItem
 
         public InventoryItemService(IHttpContextAccessor httpContextAccessor, ApplicationDbContext dbContext)
         {
-            var userClaims = httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
-            var value = userClaims.FindFirst("Id")?.Value;
-            var validId = int.TryParse(value, out _retailerId);
+            ClaimsIdentity? userClaims = httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
+            string value = userClaims.FindFirst("Id")?.Value;
+            bool validId = int.TryParse(value, out _retailerId);
             if (!validId)
             {
                 throw new Exception("Attempted to build without Retailer Id Claim");
@@ -29,13 +29,13 @@ namespace GroupAPIProject.Services.InventoryItem
         }
         public async Task<bool> CreateInventoryItemAsync(InventoryItemCreate model)
         {
-            PurchaseOrderItemEntity purchaseOrderItemExists = await _dbContext.PurchaseOrders.Where(entity => entity.RetailerId == _retailerId).Where(p => p.Id == model.PurchaseOrderId)
+            PurchaseOrderItemEntity? purchaseOrderItemExists = await _dbContext.PurchaseOrders.Where(entity => entity.RetailerId == _retailerId).Where(p => p.Id == model.PurchaseOrderId)
                 .Include(g => g.ListOfPurchaseOrderItems).SelectMany(g => g.ListOfPurchaseOrderItems).FirstOrDefaultAsync(g => g.ProductId == model.ProductId);
 
             if(purchaseOrderItemExists is null){
                 return false;
             }
-            LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
+            LocationEntity? locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
             if(locationExists is null){
                 return false;
             }
@@ -43,7 +43,7 @@ namespace GroupAPIProject.Services.InventoryItem
                 return false;
             }
 
-            InventoryItemEntity entity = new InventoryItemEntity{
+            InventoryItemEntity? entity = new InventoryItemEntity{
                 ProductId = model.ProductId,
                 LocationId = model.LocationId,
                 PurchaseOrderId = model.PurchaseOrderId,
@@ -51,10 +51,11 @@ namespace GroupAPIProject.Services.InventoryItem
             };
 
             purchaseOrderItemExists.Quantity = 0;
+            locationExists.Capacity = locationExists.Capacity - purchaseOrderItemExists.Quantity;
 
             _dbContext.InventoryItems.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
-            return numberOfChanges == 2;
+            return numberOfChanges == 3;
             // handle renaming purchaseorderitem
 
             // PurchaseOrderItemEntity blah = await _dbContext.PurchaseOrders.Include(g => g.ListOfPurchaseOrderItems).FirstOrDefaultAsync()
@@ -102,18 +103,14 @@ namespace GroupAPIProject.Services.InventoryItem
 
         public async Task<bool> InventoryItemUpdate(InventoryItemUpdate model)
         {
-            PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.PurchaseOrderId);
-            if (purchaseOrderExists == null || purchaseOrderExists.Retailer.Id != _retailerId)
-            {
-                return false;
-            }
-            LocationEntity locationExists = await _dbContext.Locations.FindAsync(model.LocationId);
-            if (locationExists == null || locationExists.RetailerId != _retailerId)
+            
+            LocationEntity? locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
+            if (locationExists == null)
             {
                 return false;
             }
             InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.Id);
-            if (inventoryItemExists == null)
+            if (inventoryItemExists == null || inventoryItemExists.RetailerId != _retailerId)
             {
                 return false;
             }
@@ -121,8 +118,10 @@ namespace GroupAPIProject.Services.InventoryItem
             {
                 inventoryItemExists.LocationId = model.LocationId;
             }
+
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
         }
+
     }
 }

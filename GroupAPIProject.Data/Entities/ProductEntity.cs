@@ -22,7 +22,7 @@ namespace GroupAPIProject.Data.Entities
         [Required]
         [ForeignKey("Supplier")]
         public int SupplierId;
-        public virtual SupplierEntity Supplier{get;set;}
+        public virtual SupplierEntity? Supplier{get;set;}
         
     }
 }

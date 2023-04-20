@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GroupAPIProject.Services.SalesOrderItem
 {
-    public class SalesOrderItemService
+    public class SalesOrderItemService : ISalesOrderItemService
     {
         private readonly int _retailerId;
         private readonly ApplicationDbContext _dbContext;
@@ -29,60 +29,84 @@ namespace GroupAPIProject.Services.SalesOrderItem
 
         public async Task<bool> CreateSalesOrderItemAsync(SalesOrderItemCreate model)
         {
-            RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
-            if (retailerExists is null)
-            {
+            SalesOrderEntity salesOrderExists = await _dbContext.SalesOrders.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.SalesOrderId);
+            if(salesOrderExists is null){
                 return false;
             }
-            // SupplierEntity supplierExists = await _dbContext.Suppliers.FirstOrDefaultAsync(g => g.Id == model.SupplierId);
-            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.InventoryItemId);
+            InventoryItemEntity inventoryItemExists = await _dbContext.Locations.Where(entity => entity.Id == salesOrderExists.LocationId)
+                .Include(g => g.ListOfInventoryItems).SelectMany(g => g.ListOfInventoryItems).FirstOrDefaultAsync(g => g.Id == model.InventoryItemId);
 
-            if (inventoryItemExists is null || inventoryItemExists.RetailerId != _retailerId)
-            {
-                return false;
-            }
-            SalesOrderEntity salesOrderExists = await _dbContext.SalesOrders.FindAsync(model.SalesOrderId);
-
-            if (salesOrderExists is null || salesOrderExists.RetailerId != _retailerId)
-            {
+            if(inventoryItemExists is null){
                 return false;
             }
 
-            SalesOrderItemEntity entity = new SalesOrderItemEntity
-            {
-                RetailerId = _retailerId,
-                InventoryItemId = model.InventoryItemId,
+            SalesOrderItemEntity entity = new SalesOrderItemEntity{
+                ProductId = inventoryItemExists.ProductId,
                 SalesOrderId = model.SalesOrderId,
+                InventoryItemId = model.InventoryItemId,
                 Quantity = model.Quantity,
                 Price = model.Price
             };
 
-            LocationEntity locationExists = await _dbContext.Locations.FindAsync(inventoryItemExists.LocationId);
-            if(locationExists is null || locationExists.RetailerId != _retailerId){
-                return false;
-            }
-           
-            locationExists.Capacity = locationExists.Capacity + model.Quantity;
             inventoryItemExists.Stock = inventoryItemExists.Stock - model.Quantity;
-
-
             _dbContext.SalesOrderItems.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
-            return numberOfChanges == 3;
+            return numberOfChanges == 2;
+
+            // RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
+            // if (retailerExists is null)
+            // {
+            //     return false;
+            // }
+            // // SupplierEntity supplierExists = await _dbContext.Suppliers.FirstOrDefaultAsync(g => g.Id == model.SupplierId);
+            // InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.InventoryItemId);
+
+            // if (inventoryItemExists is null || inventoryItemExists.RetailerId != _retailerId)
+            // {
+            //     return false;
+            // }
+            // SalesOrderEntity salesOrderExists = await _dbContext.SalesOrders.FindAsync(model.SalesOrderId);
+
+            // if (salesOrderExists is null || salesOrderExists.RetailerId != _retailerId)
+            // {
+            //     return false;
+            // }
+
+            // SalesOrderItemEntity entity = new SalesOrderItemEntity
+            // {
+            //     RetailerId = _retailerId,
+            //     InventoryItemId = model.InventoryItemId,
+            //     SalesOrderId = model.SalesOrderId,
+            //     Quantity = model.Quantity,
+            //     Price = model.Price
+            // };
+
+            // LocationEntity locationExists = await _dbContext.Locations.FindAsync(inventoryItemExists.LocationId);
+            // if(locationExists is null || locationExists.RetailerId != _retailerId){
+            //     return false;
+            // }
+           
+            // locationExists.Capacity = locationExists.Capacity + model.Quantity;
+            // inventoryItemExists.Stock = inventoryItemExists.Stock - model.Quantity;
+
+
+            // _dbContext.SalesOrderItems.Add(entity);
+            // int numberOfChanges = await _dbContext.SaveChangesAsync();
+            // return numberOfChanges == 3;
 
         }
 
-        public async Task<bool> UpdateSalesOrderItemAsync(SalesOrderItemUpdate model){
-            SalesOrderItemEntity salesOrderItemExists = await _dbContext.SalesOrderItems.FindAsync(model.Id);
-            if(salesOrderItemExists is null || salesOrderItemExists.RetailerId != _retailerId){
-                return false;
-            }
-            int originalQuantity = salesOrderItemExists.Quantity;
-            salesOrderItemExists.Quantity = model.Quantity;
-            // need to update the inventory item/ location
-            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FirstAsync()
+        // public async Task<bool> UpdateSalesOrderItemAsync(SalesOrderItemUpdate model){
+        //     SalesOrderItemEntity salesOrderItemExists = await _dbContext.SalesOrderItems.FindAsync(model.Id);
+        //     if(salesOrderItemExists is null || salesOrderItemExists.RetailerId != _retailerId){
+        //         return false;
+        //     }
+        //     int originalQuantity = salesOrderItemExists.Quantity;
+        //     salesOrderItemExists.Quantity = model.Quantity;
+        //     // need to update the inventory item/ location
+        //     InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FirstAsync()
             
-        }
+        // }
 
 
 

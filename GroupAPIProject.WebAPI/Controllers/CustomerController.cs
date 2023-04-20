@@ -6,9 +6,11 @@ using GroupAPIProject.Models.Customer;
 using GroupAPIProject.Services.Customer;
 using GroupAPIProject.Services.Token;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GroupAPIProject.WebAPI.Controllers
 {
+    [Authorize("Roles=AdminEntity")]
     [ApiController]
     [Route("api/[controller]")]
     public class CustomerController : ControllerBase
@@ -23,23 +25,23 @@ namespace GroupAPIProject.WebAPI.Controllers
             _customerService = customerService;
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> RemoveCustomer([FromBody] string customerName)
-        {
-            return await _customerService.RemoveCustomerAsync(customerName)
-                ? Ok("Customer was deleted successfully.")
-                : BadRequest("Customer could not be deleted.");
-        }
+        // [HttpDelete]
+        // public async Task<IActionResult> RemoveCustomer([FromBody] CustomerRegister customerName)
+        // {
+        //     return await _customerService.RemoveCustomerAsync(customerName)
+        //         ? Ok("Customer was deleted successfully.")
+        //         : BadRequest("Customer could not be deleted.");
+        // }
 
         [HttpPost]
         public async Task<IActionResult> InputCustomer([FromBody] CustomerRegister newCustomer)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
+
             if (await _customerService.CreateCustomerAsync(newCustomer))
                 return Ok("Customer was added successfully.");
-            
+
             return BadRequest("Customer could not be added.");
         }
 
@@ -48,10 +50,17 @@ namespace GroupAPIProject.WebAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
+
             return await _customerService.UpdateCustomerAsync(update)
                 ? Ok("Customer was updated successfully.")
                 : BadRequest("Customer was unable to be updated.");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCustomerList()
+        {
+            var customer = await _customerService.GetCustomerListsAsync();
+            return Ok(customer);
         }
     }
 }
