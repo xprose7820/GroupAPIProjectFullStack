@@ -38,9 +38,9 @@ namespace GroupAPIProject.Services.Supplier
             return await _context.SaveChangesAsync() == 1;
         }
 
-        public async Task<SupplierDetail> GetSupplierByIdAsync(int supplierId)
+        public async Task<SupplierDetail> GetSupplierByIdAsync(int SupplierId)
         {
-            var entity = await _context.Users.FindAsync(supplierId);
+            SupplierEntity entity = await _context.Suppliers.FindAsync(SupplierId);
             if (entity is null)
                 return null;
 
@@ -48,8 +48,7 @@ namespace GroupAPIProject.Services.Supplier
             {
                 Id = entity.Id,
                 SupplierName = entity.SupplierName
-            };
-
+        };
             return SupplierDetail;
         }
     }

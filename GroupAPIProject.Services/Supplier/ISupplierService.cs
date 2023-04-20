@@ -10,7 +10,7 @@ namespace GroupAPIProject.Services.Supplier
     {
         Task<bool> CreateSupplierAsync(SupplierCreate request);
         Task<bool> RemoveSupplierAsync(int SupplierId);
-        Task<bool> GetSupplierByIdAsync(int userId);
+        Task<SupplierDetail> GetSupplierByIdAsync(int SupplierId);
 
     }
 }
