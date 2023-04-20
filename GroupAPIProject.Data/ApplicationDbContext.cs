@@ -30,8 +30,8 @@ namespace GroupAPIProject.Data
 
             modelBuilder.Entity<UserEntity>()
                 .HasDiscriminator<string>("UserType")
-                .HasValue<AdminEntity>("Admin")
-                .HasValue<RetailerEntity>("Retailer");
+                .HasValue<AdminEntity>("AdminEntity")
+                .HasValue<RetailerEntity>("RetailerEntity");
             modelBuilder.Entity<SalesOrderEntity>()
                 .HasOne(so => so.Customer)
                 .WithMany(c => c.SalesOrders)

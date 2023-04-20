@@ -9,7 +9,7 @@ using GroupAPIProject.Models.SalesOrder;
 
 namespace GroupAPIProject.WebAPI.Controllers
 {
-    [Authorize("Roles=RetailerEntity")]
+    [Authorize(Policy = "CustomAdminEntity")]
     [Route("api/[controller]")]
     [ApiController]
     public class SalesOrderController : ControllerBase

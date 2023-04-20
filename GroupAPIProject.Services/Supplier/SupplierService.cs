@@ -51,5 +51,17 @@ namespace GroupAPIProject.Services.Supplier
         };
             return SupplierDetail;
         }
+
+        public async Task<IEnumerable<SupplierDetail>> GetSupplierListAsync()
+        {
+            var SupplierToDisplay = await _context.Suppliers
+                .Select(entity => new SupplierDetail
+                {
+                    Id = entity.Id,
+                    SupplierName = entity.SupplierName
+                }).ToListAsync();
+            
+            return SupplierToDisplay;
+        }
     }
 }

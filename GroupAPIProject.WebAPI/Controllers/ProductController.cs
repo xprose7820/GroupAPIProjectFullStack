@@ -53,18 +53,18 @@ namespace GroupAPIProject.WebAPI.Controllers
         //    
         //}
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateProduct([FromBody] ProductUpdate model)
-        {
-            if (!ModelState.IsValid) 
-            {
-                return BadRequest(ModelState);
-            }
-            if (await _productService.UpdateProductAsync(model))
-            {
-                return Ok("Product was Updated");
-            }
-            return BadRequest("Product Update Failed");
-        }
+        // [HttpPut]
+        // public async Task<IActionResult> UpdateProduct([FromBody] ProductUpdate model)
+        // {
+        //     if (!ModelState.IsValid) 
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
+        //     if (await _productService.UpdateProductAsync(model))
+        //     {
+        //         return Ok("Product was Updated");
+        //     }
+        //     return BadRequest("Product Update Failed");
+        // }
     }
 }
