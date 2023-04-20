@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace GroupAPIProject.WebAPI.Controllers
 {   
 
-    
+    [Authorize(Policy = "CustomAdminEntity")]
     [ApiController]
     [Route("api/[controller]")]
     public class SupplierController : ControllerBase
@@ -36,7 +36,6 @@ namespace GroupAPIProject.WebAPI.Controllers
             return BadRequest("Supplier could not be added to database");
         }
 
-        [Authorize(Policy = "CustomAdminEntity")]
         [HttpDelete]
         public async Task<IActionResult> RemoveSupplierAsync(int SupplierId)
         {
@@ -52,17 +51,17 @@ namespace GroupAPIProject.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSupplierByIdAsync([FromRoute]int SupplierId)
+        public async Task<IActionResult> GetSupplierByIdAsync(int SupplierId)
         {
            var SupplierToDisplay = await _supplierService.GetSupplierByIdAsync(SupplierId);
             return Ok(SupplierToDisplay);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetSupplierListAsync()
-        {
-           var SuppliersToDisplay = await _supplierService.GetSupplierListAsync();
-            return Ok(SuppliersToDisplay);
-        }
+        // [HttpGet]
+        // public async Task<IActionResult> GetSupplierListAsync()
+        // {
+        //    var SuppliersToDisplay = await _supplierService.GetSupplierListAsync();
+        //     return Ok(SuppliersToDisplay);
+        // }
     }
 }
