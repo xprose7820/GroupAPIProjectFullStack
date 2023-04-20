@@ -2,6 +2,7 @@
 using GroupAPIProject.Data.Entities;
 using GroupAPIProject.Models.Product;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,11 +40,17 @@ namespace GroupAPIProject.Services.Product
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
         }
+        public async Task<IEnumerable<ProductListItem>> GetProductListAsync(SupplierEntity model)
+        {
+            SupplierEntity supplier = await _dbContext.Suppliers.FindAsync(model.Id);
+            return supplier.ListOfProducts as IEnumerable<ProductListItem>;
+        }
 
         public async Task<bool> UpdateProductAsync(ProductUpdate model)
         {
-            ProductEntity productExists = await _dbContext.Products.FindAsync(model.Id);
-            if (productExists == null || productExists.SupplierId != _supplier.Id)
+            ProductEntity productExists = await _dbContext.Suppliers.Where(g => g.Id == _supplier.Id)
+                .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.ProductName == model.ProductName);
+            if (productExists == null)
             {
                 return false;
             }
