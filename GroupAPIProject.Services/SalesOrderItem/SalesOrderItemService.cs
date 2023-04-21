@@ -41,7 +41,7 @@ namespace GroupAPIProject.Services.SalesOrderItem
             }
 
             SalesOrderItemEntity entity = new SalesOrderItemEntity{
-                ProductId = inventoryItemExists.ProductId,
+                ProductName = inventoryItemExists.ProductName,
                 SalesOrderId = model.SalesOrderId,
                 InventoryItemId = model.InventoryItemId,
                 Quantity = model.Quantity,

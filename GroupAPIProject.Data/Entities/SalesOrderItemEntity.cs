@@ -21,7 +21,7 @@ namespace GroupAPIProject.Data.Entities
         public virtual SalesOrderEntity? SalesOrder { get; set; }
         // should pull Productname from SalesOrder which pulls from Inventoryitem
         [Required]
-        public int ProductId { get; set; }
+        public string ProductName { get; set; }
         [Required]
         public int Quantity { get; set; }
         [Required]
