@@ -34,8 +34,7 @@ namespace GroupAPIProject.Services.Location
             {
 
                 LocationName = request.LocationName,
-                Capacity = request.Capacity,
-                RetailerId = _retailerId
+                RetailerId = _retailerId,
 
             };
             _context.Locations.Add(locationEntity);

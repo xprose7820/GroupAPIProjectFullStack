@@ -14,5 +14,6 @@ namespace GroupAPIProject.Services.Product
         Task<IEnumerable<ProductListItem>> GetProductListAsync(int supplierId);
 
         Task<bool> UpdateProductAsync(ProductUpdate model);
+        Task<bool> DeleteProductByIdAsync(ProductDelete model);
     }
 }

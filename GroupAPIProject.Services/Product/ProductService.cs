@@ -14,7 +14,6 @@ namespace GroupAPIProject.Services.Product
 {
     public class ProductService : IProductService
     {
-        private readonly SupplierEntity _supplier;
         private readonly ApplicationDbContext _dbContext;
         public ProductService(ApplicationDbContext dbContext)
         {
@@ -48,7 +47,7 @@ namespace GroupAPIProject.Services.Product
 
         public async Task<bool> UpdateProductAsync(ProductUpdate model)
         {
-            ProductEntity productExists = await _dbContext.Suppliers.Where(g => g.Id == _supplier.Id)
+            ProductEntity productExists = await _dbContext.Suppliers.Where(g => g.Id == model.SupplierId)
                 .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.ProductName == model.ProductName);
             if (productExists == null)
             {
@@ -64,5 +63,21 @@ namespace GroupAPIProject.Services.Product
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
         }
+        public async Task<bool> DeleteProductByIdAsync(ProductDelete model){
+            ProductEntity productExists = await _dbContext.Suppliers.Where(entity => entity.Id == model.SupplierId)
+                .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.Id == model.ProductId);
+            if(productExists is null){
+                return false;
+            }
+            bool someoneHasBoughtAProduct = await _dbContext.Suppliers.Include(g => g.ListOfPurchaseOrders)
+                .SelectMany(g => g.ListOfPurchaseOrders.SelectMany(s => s.ListOfPurchaseOrderItems)).AnyAsync(s => s.ProductId == model.ProductId);
+            if(someoneHasBoughtAProduct){
+                return false;
+            }
+            _dbContext.Products.Remove(productExists);
+            int numberOfChanges = await _dbContext.SaveChangesAsync();
+            return numberOfChanges == 1;
+        }
+
     }
 }
