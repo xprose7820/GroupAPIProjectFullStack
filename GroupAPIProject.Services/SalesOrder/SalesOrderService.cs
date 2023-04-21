@@ -29,21 +29,18 @@ namespace GroupAPIProject.Services.SalesOrder
         }
         public async Task<bool> CreateSalesOrderAsync(SalesOrderCreate model){
 
-            RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
-            if(retailerExists is null){
-                return false;
-            }
+            
             CustomerEntity customerExists = await _dbContext.Customers.FindAsync(model.CustomerId);
             if (customerExists is null){
                 return false;
             }
-            LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.Id == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
+            LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
             if(locationExists is null){
                 return false;
             }
             SalesOrderEntity entity = new SalesOrderEntity{
                     CusomterId = model.CustomerId,
-                    RetailerId = model.RetailerId,
+                    RetailerId = _retailerId,
                     LocationId = model.LocationId,
                     OrderDate = DateTime.Now
             };

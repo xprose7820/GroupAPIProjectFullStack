@@ -50,8 +50,9 @@ namespace GroupAPIProject.Data.Migrations
                     b.Property<int>("LocationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PurchaseOrderId")
                         .HasColumnType("int");
@@ -224,8 +225,9 @@ namespace GroupAPIProject.Data.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -292,14 +294,14 @@ namespace GroupAPIProject.Data.Migrations
                 {
                     b.HasBaseType("GroupAPIProject.Data.Entities.UserEntity");
 
-                    b.HasDiscriminator().HasValue("Admin");
+                    b.HasDiscriminator().HasValue("AdminEntity");
                 });
 
             modelBuilder.Entity("GroupAPIProject.Data.Entities.RetailerEntity", b =>
                 {
                     b.HasBaseType("GroupAPIProject.Data.Entities.UserEntity");
 
-                    b.HasDiscriminator().HasValue("Retailer");
+                    b.HasDiscriminator().HasValue("RetailerEntity");
                 });
 
             modelBuilder.Entity("GroupAPIProject.Data.Entities.InventoryItemEntity", b =>

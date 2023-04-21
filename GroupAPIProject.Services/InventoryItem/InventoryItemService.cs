@@ -30,14 +30,14 @@ namespace GroupAPIProject.Services.InventoryItem
         public async Task<bool> CreateInventoryItemAsync(InventoryItemCreate model)
         {
             PurchaseOrderItemEntity purchaseOrderItemExists = await _dbContext.PurchaseOrders.Where(entity => entity.RetailerId == _retailerId).Where(p => p.Id == model.PurchaseOrderId)
-                .Include(g => g.ListOfPurchaseOrderItems).SelectMany(g => g.ListOfPurchaseOrderItems).FirstOrDefaultAsync(g => g.ProductId == model.ProductId);
+                .Include(g => g.ListOfPurchaseOrderItems).SelectMany(g => g.ListOfPurchaseOrderItems).FirstOrDefaultAsync(g => g.Id == model.PurchaseOrderItemId);
 
             if (purchaseOrderItemExists is null)
             {
                 return false;
             }
             LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
-            if (locationExists is null)
+            if (locationExists is null || locationExists.Capacity < purchaseOrderItemExists.Quantity)
             {
                 return false;
             }
@@ -51,7 +51,10 @@ namespace GroupAPIProject.Services.InventoryItem
                 return false;
             }
             ProductEntity obtainingProductName = await _dbContext.Suppliers.Where(entity => entity.Id == purchaseOrderExists.SupplierId)
-                .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.Id == model.ProductId);
+                .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.Id == purchaseOrderItemExists.ProductId);
+            if(obtainingProductName is null){
+                return false;
+            }
 
             InventoryItemEntity ? entity = new InventoryItemEntity
             {
@@ -60,9 +63,9 @@ namespace GroupAPIProject.Services.InventoryItem
                 PurchaseOrderId = model.PurchaseOrderId,
                 Stock = purchaseOrderItemExists.Quantity
             };
+            locationExists.Capacity = locationExists.Capacity - purchaseOrderItemExists.Quantity;
 
             purchaseOrderItemExists.Quantity = 0;
-            locationExists.Capacity = locationExists.Capacity - purchaseOrderItemExists.Quantity;
 
             _dbContext.InventoryItems.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
