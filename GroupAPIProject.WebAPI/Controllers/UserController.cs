@@ -42,7 +42,7 @@ namespace GroupAPIProject.WebAPI.Controllers
             return BadRequest("User could not be created.");
 
         }
-        [Authorize(Policy = "CustomAdminEntity")]
+        
         [HttpPost("~/api/TokenAdmin")]
         public async Task<IActionResult> TokenAdmin([FromBody] TokenRequest request)
         {
@@ -57,7 +57,7 @@ namespace GroupAPIProject.WebAPI.Controllers
             }
             return Ok(tokenResponse);
         }
-        [Authorize(Policy = "CustomRetailerEntity")]
+        
         [HttpPost("~/api/TokenRetailer")]
         public async Task<IActionResult> TokenRetailer([FromBody] TokenRequest request)
         {

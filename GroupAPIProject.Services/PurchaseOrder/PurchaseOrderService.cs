@@ -30,10 +30,7 @@ namespace GroupAPIProject.Services.PurchaseOrder
 
         public async Task<bool> CreatePurchaseOrderAsync(PurchaseOrderCreate model)
         {
-            RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
-            if(retailerExists is null){
-                return false;
-            }
+            
             SupplierEntity supplierEntity = await _dbContext.Suppliers.FindAsync(model.SupplierId);
             if(supplierEntity is null){
                 return false;
@@ -41,7 +38,7 @@ namespace GroupAPIProject.Services.PurchaseOrder
 
             PurchaseOrderEntity entity = new PurchaseOrderEntity{
                 SupplierId = model.SupplierId,
-                RetailerId = model.RetailerId,
+                RetailerId = _retailerId,
                 OrderDate = DateTime.Now
             };
 

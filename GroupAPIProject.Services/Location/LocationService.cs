@@ -32,8 +32,10 @@ namespace GroupAPIProject.Services.Location
         {
             LocationEntity locationEntity = new LocationEntity
             {
-                LocationName = request.LocationName,
-                Capacity = request.Capacity
+
+                LocationName = request.LocationName
+                RetailerId = _retailerId,
+
             };
             _context.Locations.Add(locationEntity);
             int numberOfChanges = await _context.SaveChangesAsync();
