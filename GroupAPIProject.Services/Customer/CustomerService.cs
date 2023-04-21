@@ -31,11 +31,14 @@ namespace GroupAPIProject.Services.Customer
             return numberOfChanges == 1;
         }
 
-        public async Task<bool> RemoveCustomerAsync(string customerName)
+        public async Task<bool> RemoveCustomerAsync(int customerId)
         {
-            var customerEntity = await _context.Customers.FirstOrDefaultAsync(n => n.CustomerName == customerName);
-
+            var customerEntity = await _context.Customers.FindAsync(customerId);
             if (customerEntity == null)
+
+                return false;
+
+            if (customerEntity.ListOfSalesOrders.Count == 0)
 
                 return false;
 
