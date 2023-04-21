@@ -10,7 +10,7 @@ namespace GroupAPIProject.Models.PurchaseOrder
 
         public int SupplierId { get; set; }
 
-        public int RetailerId { get; set; }
+        
 
         public DateTimeOffset OrderDate { get; set; }
     }

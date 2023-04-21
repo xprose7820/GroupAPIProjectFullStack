@@ -45,10 +45,17 @@ namespace GroupAPIProject.Services.InventoryItem
             {
                 return false;
             }
-
-            InventoryItemEntity? entity = new InventoryItemEntity
+            PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.PurchaseOrderId);
+            if (purchaseOrderExists is null)
             {
-                ProductId = model.ProductId,
+                return false;
+            }
+            ProductEntity obtainingProductName = await _dbContext.Suppliers.Where(entity => entity.Id == purchaseOrderExists.SupplierId)
+                .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.Id == model.ProductId);
+
+            InventoryItemEntity ? entity = new InventoryItemEntity
+            {
+                ProductName = obtainingProductName.ProductName,
                 LocationId = model.LocationId,
                 PurchaseOrderId = model.PurchaseOrderId,
                 Stock = purchaseOrderItemExists.Quantity
