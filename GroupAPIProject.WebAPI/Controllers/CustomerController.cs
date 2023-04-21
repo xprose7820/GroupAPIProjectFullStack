@@ -26,9 +26,9 @@ namespace GroupAPIProject.WebAPI.Controllers
         }
 
         // [HttpDelete]
-        // public async Task<IActionResult> RemoveCustomer([FromBody] CustomerRegister customerName)
+        // public async Task<IActionResult> RemoveCustomer([FromBody] int customerId)
         // {
-        //     return await _customerService.RemoveCustomerAsync(customerName)
+        //     return await _customerService.RemoveCustomerAsync(customerId)
         //         ? Ok("Customer was deleted successfully.")
         //         : BadRequest("Customer could not be deleted.");
         // }
