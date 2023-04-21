@@ -81,5 +81,17 @@ namespace GroupAPIProject.WebAPI.Controllers
             return Ok(users);
 
         }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateUserById([FromBody] UserCreate update)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return await _userService.UpdateUserAsync(update)
+                ? Ok("User was updated successfully.")
+                : BadRequest("User was unable to be updated.");
+        }
+        
     }
 }

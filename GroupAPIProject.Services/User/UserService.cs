@@ -21,7 +21,7 @@ namespace GroupAPIProject.Services.User
 
         public async Task<bool> CreateUserAsync(UserCreate newUser)
         {
-            if (newUser.Role == "Admin")
+            if (newUser.Role.ToLower() == "admin")
             {
                 AdminEntity entity = new AdminEntity
                 {
@@ -34,7 +34,7 @@ namespace GroupAPIProject.Services.User
                 return numberOfChanges == 1;
             }
 
-            if (newUser.Role == "Retailer")
+            if (newUser.Role.ToLower() == "retailer")
             {
                 RetailerEntity entity = new RetailerEntity
                 {
@@ -50,17 +50,36 @@ namespace GroupAPIProject.Services.User
             return counter == 1;
         }
 
-        // public async Task<bool> RemoveUserAsync(string userName)
-        // {
-        //     var userEntity = await _context.Users.FirstOrDefaultAsync(n => n.Username == userName);
+        public async Task<bool> RemoveAdminAsync(int userId)
+        {
+            var userEntity = await _context.Users.OfType<AdminEntity>().FirstOrDefaultAsync(g => g.Id == userId);
+            if (userEntity == null)
 
-        //     if (userEntity == null)
+                return false;
 
-        //         return false;
+            _context.Users.Remove(userEntity);
+            return await _context.SaveChangesAsync() == 1;
+        }
 
-        //     _context.Users.Remove(userEntity);
-        //     return await _context.SaveChangesAsync() == 1;
-        // }
+
+        public async Task<bool> RemoveRetailerAsync(int userId)
+        {
+            var userEntity = await _context.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == userId);
+            if (userEntity.Locations.Count == 0)
+            {
+                return false;
+            }
+            if (userEntity.PurchaseOrders.Count == 0)
+            {
+                return false;
+            }
+            if (userEntity.SalesOrders.Count == 0)
+            {
+                return false;
+            }
+            _context.Users.Remove(userEntity);
+            return await _context.SaveChangesAsync() == 1;
+        }
 
         public async Task<IEnumerable<UserList>> GetUserListAsync()
         {
@@ -74,34 +93,34 @@ namespace GroupAPIProject.Services.User
             return users;
         }
 
-        // public async Task<bool> UpdateUserAsync(UserCreate update)
-        // {
-        //     if (update.Role == "Admin")
-        //     {
-        //         var userEntity = await _context.Users.FindAsync(update);
-        //         if (userEntity.Id != null)
-        //             return false;
+        public async Task<bool> UpdateUserAsync(UserCreate update)
+        {
+            if (update.Role.ToLower() == "admin")
+            {
+                var userEntity = await _context.Users.FindAsync(update);
+                if (userEntity.Id != null)
+                    return false;
 
-        //         userEntity.Username = update.UserName;
+                userEntity.Username = update.UserName;
 
-        //     var numberOfChanges = await _context.SaveChangesAsync();
-        //     return numberOfChanges == 1;
-        //     }
-        //     if (update.Role == "Retailer")
-        //     {
-        //         var userEntity = await _context.Users.FindAsync(update);
-        //         if (userEntity.Id != null)
-        //             return false;
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+            }
+            if (update.Role.ToLower() == "retailer")
+            {
+                var userEntity = await _context.Users.FindAsync(update);
+                if (userEntity.Id != null)
+                    return false;
 
-        //         userEntity.Username = update.UserName;
+                userEntity.Username = update.UserName;
 
-        //     var numberOfChanges = await _context.SaveChangesAsync();
-        //     return numberOfChanges == 1;
-        //     }
-        //     int counter = await _context.SaveChangesAsync();
-        //     return counter == 1;
-        // }
-
-
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+            }
+            int counter = await _context.SaveChangesAsync();
+            return counter == 1;
+        }
     }
 }
+
+        
