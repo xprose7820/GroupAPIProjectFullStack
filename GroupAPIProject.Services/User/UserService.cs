@@ -50,17 +50,36 @@ namespace GroupAPIProject.Services.User
             return counter == 1;
         }
 
-        // public async Task<bool> RemoveUserAsync(string userName)
-        // {
-        //     var userEntity = await _context.Users.FirstOrDefaultAsync(n => n.Username == userName);
+        public async Task<bool> RemoveAdminAsync(int userId)
+        {
+            var userEntity = await _context.Users.OfType<AdminEntity>().FirstOrDefaultAsync(g => g.Id == userId);
+            if (userEntity == null)
 
-        //     if (userEntity == null)
+                return false;
 
-        //         return false;
+            _context.Users.Remove(userEntity);
+            return await _context.SaveChangesAsync() == 1;
+        }
 
-        //     _context.Users.Remove(userEntity);
-        //     return await _context.SaveChangesAsync() == 1;
-        // }
+
+        public async Task<bool> RemoveRetailerAsync(int userId)
+        {
+            var userEntity = await _context.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == userId);
+            if (userEntity.Locations.Count == 0)
+            {
+                return false;
+            }
+            if (userEntity.PurchaseOrders.Count == 0)
+            {
+                return false;
+            }
+            if (userEntity.SalesOrders.Count == 0)
+            {
+                return false;
+            }
+            _context.Users.Remove(userEntity);
+            return await _context.SaveChangesAsync() == 1;
+        }
 
         public async Task<IEnumerable<UserList>> GetUserListAsync()
         {

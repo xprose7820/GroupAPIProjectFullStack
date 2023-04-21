@@ -10,8 +10,8 @@ namespace GroupAPIProject.Services.User
     {
         Task<bool> CreateUserAsync(UserCreate newUser);
         Task<bool> UpdateUserAsync(UserCreate update);
-        Task<bool> RemoveUserAsync(UserCreate remove);
-
+        Task<bool> RemoveAdminAsync(UserCreate remove);
+        Task<bool> RemoveRetailerAsync(UserCreate remove);
         Task<IEnumerable<UserList>> GetUserListAsync();
 
     }
