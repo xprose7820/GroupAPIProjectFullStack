@@ -27,6 +27,7 @@ namespace GroupAPIProject.Services.SalesOrder
 
             _dbContext = dbContext;
         }
+        
         public async Task<bool> CreateSalesOrderAsync(SalesOrderCreate model){
 
             
