@@ -21,7 +21,7 @@ namespace GroupAPIProject.Services.User
 
         public async Task<bool> CreateUserAsync(UserCreate newUser)
         {
-            if (newUser.Role == "Admin")
+            if (newUser.Role.ToLower() == "admin")
             {
                 AdminEntity entity = new AdminEntity
                 {
@@ -34,7 +34,7 @@ namespace GroupAPIProject.Services.User
                 return numberOfChanges == 1;
             }
 
-            if (newUser.Role == "Retailer")
+            if (newUser.Role.ToLower() == "retailer")
             {
                 RetailerEntity entity = new RetailerEntity
                 {
@@ -73,37 +73,35 @@ namespace GroupAPIProject.Services.User
             }).ToListAsync();
             return users;
         }
+
+        public async Task<bool> UpdateUserAsync(UserCreate update)
+        {
+            if (update.Role.ToLower() == "admin")
+            {
+                var userEntity = await _context.Users.FindAsync(update);
+                if (userEntity.Id != null)
+                    return false;
+
+                userEntity.Username = update.UserName;
+
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+            }
+            if (update.Role.ToLower() == "retailer")
+            {
+                var userEntity = await _context.Users.FindAsync(update);
+                if (userEntity.Id != null)
+                    return false;
+
+                userEntity.Username = update.UserName;
+
+            var numberOfChanges = await _context.SaveChangesAsync();
+            return numberOfChanges == 1;
+            }
+            int counter = await _context.SaveChangesAsync();
+            return counter == 1;
+        }
     }
 }
 
-        // public async Task<bool> UpdateUserAsync(UserCreate update)
-        // {
-        //     if (update.Role == "Admin")
-        //     {
-        //         var userEntity = await _context.Users.FindAsync(update);
-        //         if (userEntity.Id != null)
-        //             return false;
-
-        //         userEntity.Username = update.UserName;
-
-        //     var numberOfChanges = await _context.SaveChangesAsync();
-        //     return numberOfChanges == 1;
-        //     }
-        //     if (update.Role == "Retailer")
-        //     {
-        //         var userEntity = await _context.Users.FindAsync(update);
-        //         if (userEntity.Id != null)
-        //             return false;
-
-        //         userEntity.Username = update.UserName;
-
-        //     var numberOfChanges = await _context.SaveChangesAsync();
-        //     return numberOfChanges == 1;
-        //     }
-        //     int counter = await _context.SaveChangesAsync();
-        //     return counter == 1;
-        // }
-
-
-    }
-}
+        
