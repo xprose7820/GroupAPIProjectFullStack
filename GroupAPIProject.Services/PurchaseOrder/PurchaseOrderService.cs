@@ -30,10 +30,7 @@ namespace GroupAPIProject.Services.PurchaseOrder
 
         public async Task<bool> CreatePurchaseOrderAsync(PurchaseOrderCreate model)
         {
-            RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
-            if(retailerExists is null){
-                return false;
-            }
+            
             SupplierEntity supplierEntity = await _dbContext.Suppliers.FindAsync(model.SupplierId);
             if(supplierEntity is null){
                 return false;
@@ -41,7 +38,7 @@ namespace GroupAPIProject.Services.PurchaseOrder
 
             PurchaseOrderEntity entity = new PurchaseOrderEntity{
                 SupplierId = model.SupplierId,
-                RetailerId = model.RetailerId,
+                RetailerId = _retailerId,
                 OrderDate = DateTime.Now
             };
 
@@ -72,17 +69,17 @@ namespace GroupAPIProject.Services.PurchaseOrder
             // return numberOfChanges == 1;
 
         }
-        public async Task<bool> UpdatePurchaseOrderAsync(PurchaseOrderUpdate model)
-        {
-            PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.Id);
-            if (purchaseOrderExists is null || purchaseOrderExists.RetailerId != _retailerId)
-            {
-                return false;
-            }
-            purchaseOrderExists.SupplierId = model.SupplierId;
-            int numberOfChanges = await _dbContext.SaveChangesAsync();
-            return numberOfChanges == 1;
-        }
+        // public async Task<bool> UpdatePurchaseOrderAsync(PurchaseOrderUpdate model)
+        // {
+        //     PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.FindAsync(model.Id);
+        //     if (purchaseOrderExists is null || purchaseOrderExists.RetailerId != _retailerId)
+        //     {
+        //         return false;
+        //     }
+        //     purchaseOrderExists.SupplierId = model.SupplierId;
+        //     int numberOfChanges = await _dbContext.SaveChangesAsync();
+        //     return numberOfChanges == 1;
+        // }
         
 
     }

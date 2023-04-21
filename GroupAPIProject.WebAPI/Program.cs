@@ -6,31 +6,81 @@ using Microsoft.EntityFrameworkCore;
 using GroupAPIProject.Data.Entities;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using GroupAPIProject.Services.PurchaseOrder;
+using GroupAPIProject.Services.PurchaseOrderItem;
+using GroupAPIProject.Services.SalesOrder;
+using GroupAPIProject.Services.SalesOrderItem;
+using GroupAPIProject.Services.Supplier;
+using GroupAPIProject.Services.Customer;
+using GroupAPIProject.Services.Product;
+using GroupAPIProject.Services.InventoryItem;
+using GroupAPIProject.Services.Location;
+using GroupAPIProject.Services.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sqlOptions => sqlOptions.EnableRetryOnFailure()));
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+builder.Services.AddScoped<IPurchaseOrderItemService, PurchaseOrderItemService>();
+builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
+builder.Services.AddScoped<ISalesOrderItemService, SalesOrderItemService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ISupplierService, SupplierService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IInventoryItemService, InventoryItemService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 
 builder.Services.AddControllers();
-builder.Services.AddAuthorization(options =>
-    {
-        options.AddPolicy("Admin", policy => policy.RequireClaim("Role", "Admin"));
-        options.AddPolicy("Retailer", policy => policy.RequireClaim("Role", "Retailer"));
-    });
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+builder.Services.AddAuthentication(options =>
 {
-    options.RequireHttpsMetadata = false;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = true;
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("CustomAdminEntity", policy =>
+    {
+        policy.RequireAssertion(context =>
+        {
+            var user = context.User;
+            return user.HasClaim(c => c.Type == "Role" && c.Value == "AdminEntity");
+        });
+    }
+    
+    
+    );
+     options.AddPolicy("CustomRetailerEntity", policy =>
+    {
+        policy.RequireAssertion(context =>
+        {
+            var user = context.User;
+            return user.HasClaim(c => c.Type == "Role" && c.Value == "RetailerEntity");
+        });
+    }
+    
+    
+    );
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -72,8 +122,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 
 app.UseAuthorization();
+
 
 app.MapControllers();
 

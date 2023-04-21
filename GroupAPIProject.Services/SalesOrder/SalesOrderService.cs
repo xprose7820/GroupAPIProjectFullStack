@@ -27,23 +27,21 @@ namespace GroupAPIProject.Services.SalesOrder
 
             _dbContext = dbContext;
         }
+        
         public async Task<bool> CreateSalesOrderAsync(SalesOrderCreate model){
 
-            RetailerEntity retailerExists = await _dbContext.Users.OfType<RetailerEntity>().FirstOrDefaultAsync(g => g.Id == model.RetailerId);
-            if(retailerExists is null){
-                return false;
-            }
+            
             CustomerEntity customerExists = await _dbContext.Customers.FindAsync(model.CustomerId);
             if (customerExists is null){
                 return false;
             }
-            LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.Id == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
+            LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
             if(locationExists is null){
                 return false;
             }
             SalesOrderEntity entity = new SalesOrderEntity{
                     CusomterId = model.CustomerId,
-                    RetailerId = model.RetailerId,
+                    RetailerId = _retailerId,
                     LocationId = model.LocationId,
                     OrderDate = DateTime.Now
             };
@@ -77,15 +75,15 @@ namespace GroupAPIProject.Services.SalesOrder
             // int numberOfChanges = await _dbContext.SaveChangesAsync();
             // return numberOfChanges == 1;
         }
-        public async Task<bool> UpdateSalesOrderAsync(SalesOrderUpdate model){
-            SalesOrderEntity salesOrderExists = await _dbContext.SalesOrders.FindAsync(model.Id);
-            if(salesOrderExists is null || salesOrderExists.RetailerId != _retailerId){
-                return false;
-            }
-            salesOrderExists.CusomterId = model.CusomterId;
-            int numberOfChanges = await _dbContext.SaveChangesAsync();
-            return numberOfChanges == 1;
-        }
+        // public async Task<bool> UpdateSalesOrderAsync(SalesOrderUpdate model){
+        //     SalesOrderEntity salesOrderExists = await _dbContext.SalesOrders.FindAsync(model.Id);
+        //     if(salesOrderExists is null || salesOrderExists.RetailerId != _retailerId){
+        //         return false;
+        //     }
+        //     salesOrderExists.CusomterId = model.CusomterId;
+        //     int numberOfChanges = await _dbContext.SaveChangesAsync();
+        //     return numberOfChanges == 1;
+        // }
 
     }
 }

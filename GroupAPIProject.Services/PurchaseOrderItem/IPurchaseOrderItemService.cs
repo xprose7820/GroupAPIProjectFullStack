@@ -9,6 +9,6 @@ namespace GroupAPIProject.Services.PurchaseOrderItem
     public interface IPurchaseOrderItemService
     {
         Task<bool> CreatePurchaseOrderItemAsync(PurchaseOrderItemCreate model);
-        Task<bool> UpdatePurchaseOrderItemAsync(PurchaseOrderItemUpdate model);
+        // Task<bool> UpdatePurchaseOrderItemAsync(PurchaseOrderItemUpdate model);
     }
 }

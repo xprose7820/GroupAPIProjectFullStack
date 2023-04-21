@@ -29,29 +29,43 @@ namespace GroupAPIProject.Services.InventoryItem
         }
         public async Task<bool> CreateInventoryItemAsync(InventoryItemCreate model)
         {
-            PurchaseOrderItemEntity? purchaseOrderItemExists = await _dbContext.PurchaseOrders.Where(entity => entity.RetailerId == _retailerId).Where(p => p.Id == model.PurchaseOrderId)
-                .Include(g => g.ListOfPurchaseOrderItems).SelectMany(g => g.ListOfPurchaseOrderItems).FirstOrDefaultAsync(g => g.ProductId == model.ProductId);
+            PurchaseOrderItemEntity purchaseOrderItemExists = await _dbContext.PurchaseOrders.Where(entity => entity.RetailerId == _retailerId).Where(p => p.Id == model.PurchaseOrderId)
+                .Include(g => g.ListOfPurchaseOrderItems).SelectMany(g => g.ListOfPurchaseOrderItems).FirstOrDefaultAsync(g => g.Id == model.PurchaseOrderItemId);
 
-            if(purchaseOrderItemExists is null){
+            if (purchaseOrderItemExists is null)
+            {
                 return false;
             }
-            LocationEntity? locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
-            if(locationExists is null){
+            LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
+            if (locationExists is null || locationExists.Capacity < purchaseOrderItemExists.Quantity)
+            {
                 return false;
             }
-            if(purchaseOrderItemExists.Quantity == 0){
+            if (purchaseOrderItemExists.Quantity == 0)
+            {
+                return false;
+            }
+            PurchaseOrderEntity purchaseOrderExists = await _dbContext.PurchaseOrders.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.PurchaseOrderId);
+            if (purchaseOrderExists is null)
+            {
+                return false;
+            }
+            ProductEntity obtainingProductName = await _dbContext.Suppliers.Where(entity => entity.Id == purchaseOrderExists.SupplierId)
+                .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.Id == purchaseOrderItemExists.ProductId);
+            if(obtainingProductName is null){
                 return false;
             }
 
-            InventoryItemEntity? entity = new InventoryItemEntity{
-                ProductId = model.ProductId,
+            InventoryItemEntity ? entity = new InventoryItemEntity
+            {
+                ProductName = obtainingProductName.ProductName,
                 LocationId = model.LocationId,
                 PurchaseOrderId = model.PurchaseOrderId,
                 Stock = purchaseOrderItemExists.Quantity
             };
+            locationExists.Capacity = locationExists.Capacity - purchaseOrderItemExists.Quantity;
 
             purchaseOrderItemExists.Quantity = 0;
-            locationExists.Capacity = locationExists.Capacity - purchaseOrderItemExists.Quantity;
 
             _dbContext.InventoryItems.Add(entity);
             int numberOfChanges = await _dbContext.SaveChangesAsync();
@@ -103,13 +117,14 @@ namespace GroupAPIProject.Services.InventoryItem
 
         public async Task<bool> InventoryItemUpdate(InventoryItemUpdate model)
         {
-            
-            LocationEntity? locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
+
+
+            LocationEntity locationExists = await _dbContext.Locations.Where(entity => entity.RetailerId == _retailerId).FirstOrDefaultAsync(g => g.Id == model.LocationId);
             if (locationExists == null)
             {
                 return false;
             }
-            InventoryItemEntity? inventoryItemExists = locationExists.ListOfInventoryItems.FirstOrDefault(g => g.Id == model.Id);
+            InventoryItemEntity inventoryItemExists = await _dbContext.InventoryItems.FindAsync(model.Id);
             if (inventoryItemExists == null)
             {
                 return false;
@@ -122,6 +137,7 @@ namespace GroupAPIProject.Services.InventoryItem
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
         }
+
 
     }
 }

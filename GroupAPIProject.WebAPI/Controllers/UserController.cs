@@ -7,6 +7,7 @@ using GroupAPIProject.Models.Token;
 using GroupAPIProject.Models.User;
 using GroupAPIProject.Services.Token;
 using GroupAPIProject.Services.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GroupAPIProject.WebAPI.Controllers
@@ -41,6 +42,7 @@ namespace GroupAPIProject.WebAPI.Controllers
             return BadRequest("User could not be created.");
 
         }
+        
         [HttpPost("~/api/TokenAdmin")]
         public async Task<IActionResult> TokenAdmin([FromBody] TokenRequest request)
         {
@@ -55,8 +57,9 @@ namespace GroupAPIProject.WebAPI.Controllers
             }
             return Ok(tokenResponse);
         }
+        
         [HttpPost("~/api/TokenRetailer")]
-        public async Task<IActionResult> TokenRetalier([FromBody] TokenRequest request)
+        public async Task<IActionResult> TokenRetailer([FromBody] TokenRequest request)
         {
             if (!ModelState.IsValid)
             {

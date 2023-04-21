@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GroupAPIProject.WebAPI.Controllers
 {
-    [Authorize("Roles=RetailerEntity")]
+    [Authorize(Policy = "CustomRetailerEntity")]
     [Route("api/[controller]")]
     [ApiController]
     public class PurchaseOrderItemController : ControllerBase

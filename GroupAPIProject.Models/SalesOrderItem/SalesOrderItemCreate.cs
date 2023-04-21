@@ -10,7 +10,7 @@ namespace GroupAPIProject.Models.SalesOrderItem
      
         public int SalesOrderId { get; set; }
         public int InventoryItemId{get;set;}
-        public int ProductId { get; set; }
+        
         public int Quantity { get; set; }
         
         public double Price { get; set; }
