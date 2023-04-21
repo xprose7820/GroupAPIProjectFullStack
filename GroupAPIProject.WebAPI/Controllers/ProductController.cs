@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GroupAPIProject.WebAPI.Controllers
 {
-    [Authorize("Roles=AdminEntity")]
+    [Authorize(Policy = "CustomAdminEntity")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
@@ -29,8 +29,8 @@ namespace GroupAPIProject.WebAPI.Controllers
             }
             return BadRequest("Product Creation Failed");
         }
-        // [HttpGet]
-        // public async Task<IActionResult> GetProductListBySupplier()
+        // [HttpGet("{supplierId: int}")]
+        // public async Task<IActionResult> GetProductListBySupplierId([FromRoute] int supplierId)
         // {
         //     if (!ModelState.IsValid) 
         //     {
