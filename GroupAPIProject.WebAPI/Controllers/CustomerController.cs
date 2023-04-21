@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace GroupAPIProject.WebAPI.Controllers
 {
-    [Authorize(Roles="AdminEntity")]
+    [Authorize(Policy = "CustomAdminEntity")]
     [ApiController]
     [Route("api/[controller]")]
     public class CustomerController : ControllerBase

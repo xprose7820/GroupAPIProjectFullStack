@@ -9,27 +9,31 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GroupAPIProject.WebAPI.Controllers
 {
-    [Authorize("Roles=RetailerEntity")]
+    [Authorize(Policy = "CustomRetailerEntity")]
     [Route("api/[controller]")]
     [ApiController]
     public class PurchaseOrderController : ControllerBase
     {
         private readonly IPurchaseOrderService _purchaseOrderService;
-        public PurchaseOrderController(IPurchaseOrderService purchaseOrderService){
+        public PurchaseOrderController(IPurchaseOrderService purchaseOrderService)
+        {
             _purchaseOrderService = purchaseOrderService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePurchaseOrder(PurchaseOrderCreate model){
-            if(!ModelState.IsValid){
+        public async Task<IActionResult> CreatePurchaseOrder(PurchaseOrderCreate model)
+        {
+            if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
             }
-            if(await _purchaseOrderService.CreatePurchaseOrderAsync(model)){
+            if (await _purchaseOrderService.CreatePurchaseOrderAsync(model))
+            {
                 return Ok("ProductOrder added to Retailer");
             }
             return BadRequest("ProductOrder not added to Retailer");
 
         }
-        
+
     }
 }

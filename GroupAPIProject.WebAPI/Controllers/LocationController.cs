@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
 namespace GroupAPIProject.WebAPI.Controllers
-{ [Authorize(Roles="RetailerEntity")]
+{ [Authorize(Policy = "CustomRetailerEntity")]
     [ApiController]
     [Route("api/[controller]")]
     public class LocationController : ControllerBase
