@@ -32,5 +32,19 @@ namespace GroupAPIProject.WebAPI.Controllers
             }
             return BadRequest("Location could not be added to database");
         }
+
+        [HttpDelete("{locationId:int}")]
+        public async Task<IActionResult> RemoveLocation([FromRoute] int locationId)
+        {
+            return await _locationService.RemoveLocationAsync(locationId)
+                ? Ok($"Location {locationId} was deleted successfully.")
+                : BadRequest($"Location {locationId} could not be deleted.");
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetSupplierListAsync()
+        {
+            var LocationsToDisplay = await _locationService.GetLocationListAsync();
+            return Ok(LocationsToDisplay);
+        }
     }
 }

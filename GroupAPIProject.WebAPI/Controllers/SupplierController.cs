@@ -36,22 +36,10 @@ namespace GroupAPIProject.WebAPI.Controllers
             return BadRequest("Supplier could not be added to database");
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> RemoveSupplierAsync(int SupplierId)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (await _supplierService.RemoveSupplierAsync(SupplierId))
-            {
-                return Ok("Supplier has been deleted");
-            }
-            return BadRequest("Supplier could not be deleted");
-        }
+        
 
-        [HttpGet]
-        public async Task<IActionResult> GetSupplierByIdAsync(int SupplierId)
+        [HttpGet("{SupplierId:int}")]
+        public async Task<IActionResult> GetSupplierByIdAsync([FromRoute]int SupplierId)
         {
             var SupplierToDisplay = await _supplierService.GetSupplierByIdAsync(SupplierId);
             return Ok(SupplierToDisplay);
@@ -65,7 +53,7 @@ namespace GroupAPIProject.WebAPI.Controllers
         }
 
         [HttpDelete("{supplierId:int}")]
-        public async Task<IActionResult> DeleteNote([FromRoute] int supplierId)
+        public async Task<IActionResult> DeleteSupplier([FromRoute] int supplierId)
         {
             return await _supplierService.RemoveSupplierAsync(supplierId)
                 ? Ok($"Supplier {supplierId} was deleted successfully.")
