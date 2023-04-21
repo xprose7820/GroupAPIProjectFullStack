@@ -47,7 +47,7 @@ namespace GroupAPIProject.Services.Product
 
         public async Task<bool> UpdateProductAsync(ProductUpdate model)
         {
-            ProductEntity productExists = await _dbContext.Suppliers.Where(g => g.Id == _supplier.Id)
+            ProductEntity productExists = await _dbContext.Suppliers.Where(g => g.Id == model.SupplierId)
                 .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.ProductName == model.ProductName);
             if (productExists == null)
             {
