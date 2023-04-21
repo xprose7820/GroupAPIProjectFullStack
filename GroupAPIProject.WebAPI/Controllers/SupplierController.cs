@@ -50,8 +50,8 @@ namespace GroupAPIProject.WebAPI.Controllers
             return BadRequest("Supplier could not be deleted");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetSupplierByIdAsync(int SupplierId)
+        [HttpGet("{SupplierId:int}")]
+        public async Task<IActionResult> GetSupplierByIdAsync([FromRoute]int SupplierId)
         {
             var SupplierToDisplay = await _supplierService.GetSupplierByIdAsync(SupplierId);
             return Ok(SupplierToDisplay);
