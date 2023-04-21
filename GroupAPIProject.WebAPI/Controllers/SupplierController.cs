@@ -21,7 +21,7 @@ namespace GroupAPIProject.WebAPI.Controllers
         {
             _supplierService = supplierService;
         }
-        
+        [Authorize(Policy = "CustomAdminEntity")]
         [HttpPost]
         public async Task<IActionResult> CreateSupplier(SupplierCreate model)
         {
@@ -36,26 +36,26 @@ namespace GroupAPIProject.WebAPI.Controllers
             return BadRequest("Supplier could not be added to database");
         }
 
-        // [HttpDelete]
-        // public async Task<IActionResult> RemoveSupplierAsync(int SupplierId)
-        // {
-        //      if (!ModelState.IsValid)
-        //     {
-        //         return BadRequest(ModelState);
-        //     }
-        //     if (await _supplierService.RemoveSupplierAsync(SupplierId))
-        //     {
-        //         return Ok("Supplier has been deleted");
-        //     }
-        //     return BadRequest("Supplier could not be deleted");
-        // }
+        [HttpDelete]
+        public async Task<IActionResult> RemoveSupplierAsync(int SupplierId)
+        {
+             if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (await _supplierService.RemoveSupplierAsync(SupplierId))
+            {
+                return Ok("Supplier has been deleted");
+            }
+            return BadRequest("Supplier could not be deleted");
+        }
 
-        // [HttpGet]
-        // public async Task<IActionResult> GetSupplierByIdAsync(int SupplierId)
-        // {
-        //    var SupplierToDisplay = await _supplierService.GetSupplierByIdAsync(SupplierId);
-        //     return Ok(SupplierToDisplay);
-        // }
+        [HttpGet]
+        public async Task<IActionResult> GetSupplierByIdAsync(int SupplierId)
+        {
+           var SupplierToDisplay = await _supplierService.GetSupplierByIdAsync(SupplierId);
+            return Ok(SupplierToDisplay);
+        }
 
         // [HttpGet]
         // public async Task<IActionResult> GetSupplierListAsync()

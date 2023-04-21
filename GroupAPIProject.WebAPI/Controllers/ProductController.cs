@@ -1,4 +1,5 @@
-﻿using GroupAPIProject.Models.Product;
+﻿using GroupAPIProject.Data.Entities;
+using GroupAPIProject.Models.Product;
 using GroupAPIProject.Services.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,7 @@ namespace GroupAPIProject.WebAPI.Controllers
             }
             return BadRequest("Product Creation Failed");
         }
+
         // [HttpGet("{supplierId: int}")]
         // public async Task<IActionResult> GetProductListBySupplierId([FromRoute] int supplierId)
         // {
