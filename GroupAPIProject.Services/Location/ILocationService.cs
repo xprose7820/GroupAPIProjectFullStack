@@ -9,6 +9,7 @@ namespace GroupAPIProject.Services.Location
     public interface ILocationService
     {
         Task<bool> CreateLocationAsync(LocationCreate request);
-        Task<bool> RemoveLocationAsync(string LocationName);
+        Task<bool> RemoveLocationAsync(int LocationId);
+        Task<IEnumerable<LocationDetail>> GetLocationListAsync();
     }
 }
