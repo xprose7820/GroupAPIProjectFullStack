@@ -20,6 +20,16 @@ using GroupAPIProject.Services.User;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: "MyPolicy",
+            builder =>
+            {
+                builder.WithOrigins("http://127.0.0.1:5500")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+    });
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), sqlOptions => sqlOptions.EnableRetryOnFailure()));
 builder.Services.AddHttpContextAccessor();
 
@@ -67,20 +77,20 @@ builder.Services.AddAuthorization(options =>
             return user.HasClaim(c => c.Type == "Role" && c.Value == "AdminEntity");
         });
     }
-    
-    
+
+
     );
-     options.AddPolicy("CustomRetailerEntity", policy =>
-    {
-        policy.RequireAssertion(context =>
-        {
-            var user = context.User;
-            return user.HasClaim(c => c.Type == "Role" && c.Value == "RetailerEntity");
-        });
-    }
-    
-    
-    );
+    options.AddPolicy("CustomRetailerEntity", policy =>
+   {
+       policy.RequireAssertion(context =>
+       {
+           var user = context.User;
+           return user.HasClaim(c => c.Type == "Role" && c.Value == "RetailerEntity");
+       });
+   }
+
+
+   );
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -126,7 +136,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-
+app.UseCors("MyPolicy");
 app.MapControllers();
 
 app.Run();

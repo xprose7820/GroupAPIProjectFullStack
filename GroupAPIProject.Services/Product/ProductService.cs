@@ -45,39 +45,39 @@ namespace GroupAPIProject.Services.Product
             return supplier.ListOfProducts as IEnumerable<ProductListItem>;
         }
 
-        public async Task<bool> UpdateProductAsync(ProductUpdate model)
-        {
-            ProductEntity productExists = await _dbContext.Suppliers.Where(g => g.Id == _supplier.Id)
-                .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.ProductName == model.ProductName);
-            if (productExists == null)
-            {
-                return false;
-            }
-            else
-            {
-                productExists.ProductName = model.ProductName;
-                productExists.Description = model.Description;
-                productExists.Category = model.Category;
-                productExists.Price = model.Price;
-            }
-            int numberOfChanges = await _dbContext.SaveChangesAsync();
-            return numberOfChanges == 1;
-        }
-        public async Task<bool> DeleteProductByIdAsync(ProductDelete model){
-            ProductEntity productExists = await _dbContext.Suppliers.Where(entity => entity.Id == model.SupplierId)
-                .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.Id == model.ProductId);
-            if(productExists is null){
-                return false;
-            }
-            bool someoneHasBoughtAProduct = await _dbContext.Suppliers.Include(g => g.ListOfPurchaseOrders)
-                .SelectMany(g => g.ListOfPurchaseOrders.SelectMany(s => s.ListOfPurchaseOrderItems)).AnyAsync(s => s.ProductId == model.ProductId);
-            if(someoneHasBoughtAProduct){
-                return false;
-            }
-            _dbContext.Products.Remove(productExists);
-            int numberOfChanges = await _dbContext.SaveChangesAsync();
-            return numberOfChanges == 1;
-        }
+        // public async Task<bool> UpdateProductAsync(ProductUpdate model)
+        // {
+        //     ProductEntity productExists = await _dbContext.Suppliers.Where(g => g.Id == _supplier.Id)
+        //         .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.ProductName == model.ProductName);
+        //     if (productExists == null)
+        //     {
+        //         return false;
+        //     }
+        //     else
+        //     {
+        //         productExists.ProductName = model.ProductName;
+        //         productExists.Description = model.Description;
+        //         productExists.Category = model.Category;
+        //         productExists.Price = model.Price;
+        //     }
+        //     int numberOfChanges = await _dbContext.SaveChangesAsync();
+        //     return numberOfChanges == 1;
+        // }
+        // public async Task<bool> DeleteProductByIdAsync(ProductDelete model){
+        //     ProductEntity productExists = await _dbContext.Suppliers.Where(entity => entity.Id == model.SupplierId)
+        //         .Include(g => g.ListOfProducts).SelectMany(g => g.ListOfProducts).FirstOrDefaultAsync(g => g.Id == model.ProductId);
+        //     if(productExists is null){
+        //         return false;
+        //     }
+        //     bool someoneHasBoughtAProduct = await _dbContext.Suppliers.Include(g => g.ListOfPurchaseOrders)
+        //         .SelectMany(g => g.ListOfPurchaseOrders.SelectMany(s => s.ListOfPurchaseOrderItems)).AnyAsync(s => s.ProductId == model.ProductId);
+        //     if(someoneHasBoughtAProduct){
+        //         return false;
+        //     }
+        //     _dbContext.Products.Remove(productExists);
+        //     int numberOfChanges = await _dbContext.SaveChangesAsync();
+        //     return numberOfChanges == 1;
+        // }
 
     }
 }

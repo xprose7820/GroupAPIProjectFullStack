@@ -34,7 +34,7 @@ namespace GroupAPIProject.Data
                 .HasValue<RetailerEntity>("RetailerEntity");
             modelBuilder.Entity<SalesOrderEntity>()
                 .HasOne(so => so.Customer)
-                .WithMany(c => c.SalesOrders)
+                .WithMany(c => c.ListOfSalesOrders)
                 .HasForeignKey(so => so.CusomterId)
                 .OnDelete(DeleteBehavior.Restrict);
 
