@@ -18,7 +18,7 @@ using GroupAPIProject.Services.Location;
 using GroupAPIProject.Services.User;
 
 var builder = WebApplication.CreateBuilder(args);
-
+// hi
 // Add services to the container.
 builder.Services.AddCors(options =>
     {
