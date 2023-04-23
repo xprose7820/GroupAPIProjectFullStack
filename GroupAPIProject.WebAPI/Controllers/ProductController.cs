@@ -30,19 +30,19 @@ namespace GroupAPIProject.WebAPI.Controllers
             }
             return BadRequest("Product Creation Failed");
         }
-        [HttpDelete]
-        public async Task<IActionResult> DeleteProductById([FromBody] ProductDelete model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (await _productService.DeleteProductByIdAsync(model))
-            {
-                return Ok("Product Was Created");
-            }
-            return BadRequest("Product Creation Failed");
-        }
+        // [HttpDelete]
+        // public async Task<IActionResult> DeleteProductById([FromBody] ProductDelete model)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return BadRequest(ModelState);
+        //     }
+        //     if (await _productService.DeleteProductByIdAsync(model))
+        //     {
+        //         return Ok("Product Was Created");
+        //     }
+        //     return BadRequest("Product Creation Failed");
+        // }
 
 
         // [HttpGet("{supplierId: int}")]

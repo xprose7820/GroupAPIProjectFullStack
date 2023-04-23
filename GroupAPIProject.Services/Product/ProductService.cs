@@ -45,6 +45,7 @@ namespace GroupAPIProject.Services.Product
             return supplier.ListOfProducts as IEnumerable<ProductListItem>;
         }
 
+
         public async Task<bool> UpdateProductAsync(ProductUpdate model)
         {
             ProductEntity productExists = await _dbContext.Suppliers.Where(g => g.Id == model.SupplierId)
@@ -78,6 +79,7 @@ namespace GroupAPIProject.Services.Product
             int numberOfChanges = await _dbContext.SaveChangesAsync();
             return numberOfChanges == 1;
         }
+
 
     }
 }
